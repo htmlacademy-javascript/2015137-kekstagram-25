@@ -18,6 +18,5 @@ const checkStringLength = function (currentString, maxLength) {
   }
   return true;
 };
-
 getRandomRoundNumber();
 checkStringLength();
