@@ -1,4 +1,7 @@
 const getRandomRoundNumber = function (firstNumber, secondNumber) {
+  if (firstNumber < 0 || secondNumber < 0) {
+    return;
+  }
   firstNumber = Math.ceil(firstNumber);
   secondNumber = Math.floor(secondNumber);
   if (firstNumber === secondNumber) {
@@ -10,13 +13,11 @@ const getRandomRoundNumber = function (firstNumber, secondNumber) {
   return Math.floor(Math.random() * (firstNumber - secondNumber + 1)) + secondNumber;
 };
 const checkStringLength = function (currentString, maxLength) {
-  if (typeof(currentString) === 'number') {
-    currentString = String(currentString);
-  }
   if (currentString.length > maxLength) {
     return false;
   }
   return true;
 };
+
 getRandomRoundNumber();
 checkStringLength();
