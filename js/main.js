@@ -12,12 +12,10 @@ const getRandomRoundNumber = function (firstNumber, secondNumber) {
   }
   return Math.floor(Math.random() * (firstNumber - secondNumber + 1)) + secondNumber;
 };
-const checkStringLength = function (currentString, maxLength) {
-  if (currentString.length > maxLength) {
-    return false;
-  }
-  return true;
+
+const checkStringLength = function (string, maxLength) {
+  return (string.length <= maxLength);
 };
 
-getRandomRoundNumber();
-checkStringLength();
+getRandomRoundNumber(0, 3);
+checkStringLength('some', 10);
