@@ -1,4 +1,4 @@
-const requiredPhotoCardsNumber = 25;
+const REQUIRED_PHOTOCARDS = 25;
 const usedCommentsIds = [];
 
 const getRandomRoundNumber = (firstNumber, secondNumber) => {
@@ -17,6 +17,8 @@ const getRandomRoundNumber = (firstNumber, secondNumber) => {
 };
 
 const checkStringLength = (string, maxLength) => (string.length <= maxLength);
+
+const getRandomArrayElement = (elements) => elements[getRandomRoundNumber(0, elements.length - 1)];
 
 checkStringLength('some', 10);
 
@@ -52,7 +54,7 @@ const createPhotoCardDescription = function(cardsAmount) {
     photoCards[i] = {
       id: i + 1,
       url: `photos/${  i + 1  }.jpg`,
-      description: PHOTO_DESCRIPTIONS[getRandomRoundNumber(0, PHOTO_DESCRIPTIONS.length - 1)],
+      description: getRandomArrayElement(PHOTO_DESCRIPTIONS),
       likes: getRandomRoundNumber(15, 200),
       COMMENTS: []
     };
@@ -61,12 +63,12 @@ const createPhotoCardDescription = function(cardsAmount) {
       photoCards[i].COMMENTS[j] = {
         id: getNewCommentId(),
         avatar: `img/avatar-${  getRandomRoundNumber(1, 6)  }.svg`,
-        message: COMMENTS[getRandomRoundNumber(0, COMMENTS.length - 1)],
-        name: COMMENTS_AUTORS_NAMES[getRandomRoundNumber(0, COMMENTS_AUTORS_NAMES.length - 1)]
+        message: getRandomArrayElement(COMMENTS),
+        name: getRandomArrayElement(COMMENTS_AUTORS_NAMES)
       };
     }
   }
   return photoCards;
 };
 
-createPhotoCardDescription(requiredPhotoCardsNumber);
+createPhotoCardDescription(REQUIRED_PHOTOCARDS);
