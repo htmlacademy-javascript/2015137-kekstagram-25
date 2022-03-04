@@ -1,7 +1,7 @@
 const requiredPhotoCardsNumber = 25;
 const usedCommentsIds = [];
 
-const getRandomRoundNumber = function (firstNumber, secondNumber) {
+const getRandomRoundNumber = (firstNumber, secondNumber) => {
   if (firstNumber < 0 || secondNumber < 0) {
     return;
   }
@@ -16,17 +16,15 @@ const getRandomRoundNumber = function (firstNumber, secondNumber) {
   return Math.floor(Math.random() * (firstNumber - secondNumber + 1)) + secondNumber;
 };
 
-const checkStringLength = function (string, maxLength) {
-  return (string.length <= maxLength);
-};
+const checkStringLength = (string, maxLength) => (string.length <= maxLength);
 
 checkStringLength('some', 10);
 
-const photoDescriptions = [
+const PHOTO_DESCRIPTIONS = [
   'Современная квартира', 'Подвал', 'Картина', 'Пещера', 'Город', 'Небо', 'Чердак', 'Улица', 'Водопад', 'Сад', 'Океан'
 ];
 
-const comments = [
+const COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -35,7 +33,7 @@ const comments = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-const commentsAuthorsNames = [
+const COMMENTS_AUTORS_NAMES = [
   'Ярослав', 'Владислав', 'Ульяна', 'София', 'Арсений', 'Майя', 'Дмитрий', 'Владимир', 'Мария', 'Николай', 'Тимофей', 'Валентина'
 ];
 
@@ -54,17 +52,17 @@ const createPhotoCardDescription = function(cardsAmount) {
     photoCards[i] = {
       id: i + 1,
       url: `photos/${  i + 1  }.jpg`,
-      description: photoDescriptions[getRandomRoundNumber(0, photoDescriptions.length - 1)],
+      description: PHOTO_DESCRIPTIONS[getRandomRoundNumber(0, PHOTO_DESCRIPTIONS.length - 1)],
       likes: getRandomRoundNumber(15, 200),
-      comments: []
+      COMMENTS: []
     };
     const photoCommentsNumber = getRandomRoundNumber(1, 3);
     for (let j = 0; j < photoCommentsNumber; j++) {
-      photoCards[i].comments[j] = {
+      photoCards[i].COMMENTS[j] = {
         id: getNewCommentId(),
         avatar: `img/avatar-${  getRandomRoundNumber(1, 6)  }.svg`,
-        message: comments[getRandomRoundNumber(0, comments.length - 1)],
-        name: commentsAuthorsNames[getRandomRoundNumber(0, commentsAuthorsNames.length - 1)]
+        message: COMMENTS[getRandomRoundNumber(0, COMMENTS.length - 1)],
+        name: COMMENTS_AUTORS_NAMES[getRandomRoundNumber(0, COMMENTS_AUTORS_NAMES.length - 1)]
       };
     }
   }
