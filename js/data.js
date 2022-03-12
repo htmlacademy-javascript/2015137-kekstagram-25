@@ -6,7 +6,7 @@ const MAX_PHOTO_COMMENTS = 3;
 const MIN_PHOTO_LIKES = 15;
 const MAX_PHOTO_LIKES = 200;
 const usedCommentsIds = [];
-const photoCardsData = [];
+//const PhotoCardsData = [];
 
 const PHOTO_DESCRIPTIONS = [
   'Современная квартира', 'Подвал', 'Картина', 'Пещера', 'Город', 'Небо', 'Чердак', 'Улица', 'Водопад', 'Сад', 'Океан'
@@ -58,11 +58,12 @@ const createPhotoCardDescription = (cardIndex) => ({
   comments: getPhotoComments(),
 });
 
-const createPhotoCards = (cardsAmount) => {
+const createPhotoCardsData = (cardsAmount) => {
+  const PhotoCardsData = [];
   for (let i = 0; i < cardsAmount; i++) {
-    photoCardsData[i] = createPhotoCardDescription(i);
+    PhotoCardsData[i] = createPhotoCardDescription(i);
   }
+  return PhotoCardsData;
 };
 
-createPhotoCards(REQUIRED_PHOTOCARDS);
-export {photoCardsData};
+export {createPhotoCardsData, REQUIRED_PHOTOCARDS};
