@@ -6,7 +6,6 @@ const MAX_PHOTO_COMMENTS = 3;
 const MIN_PHOTO_LIKES = 15;
 const MAX_PHOTO_LIKES = 200;
 const usedCommentsIds = [];
-//const PhotoCardsData = [];
 
 const PHOTO_DESCRIPTIONS = [
   'Современная квартира', 'Подвал', 'Картина', 'Пещера', 'Город', 'Небо', 'Чердак', 'Улица', 'Водопад', 'Сад', 'Океан'
