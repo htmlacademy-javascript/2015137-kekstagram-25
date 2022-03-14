@@ -58,11 +58,11 @@ const createPhotoCardDescription = (cardIndex) => ({
 });
 
 const createPhotoCardsData = (cardsAmount) => {
-  const PhotoCardsData = [];
+  const photoCardsData = [];
   for (let i = 0; i < cardsAmount; i++) {
-    PhotoCardsData[i] = createPhotoCardDescription(i);
+    photoCardsData[i] = createPhotoCardDescription(i);
   }
-  return PhotoCardsData;
+  return photoCardsData;
 };
 
 export {createPhotoCardsData, REQUIRED_PHOTOCARDS};
