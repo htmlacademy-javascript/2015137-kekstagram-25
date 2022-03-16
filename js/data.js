@@ -1,5 +1,4 @@
-import { getRandomRoundNumber } from './util';
-import { getRandomArrayElement } from './util';
+import { getRandomRoundNumber, getRandomArrayElement } from './util.js';
 
 const REQUIRED_PHOTOCARDS = 25;
 const MAX_ID_NUMBER = 9999;
@@ -7,7 +6,6 @@ const MAX_PHOTO_COMMENTS = 3;
 const MIN_PHOTO_LIKES = 15;
 const MAX_PHOTO_LIKES = 200;
 const usedCommentsIds = [];
-const photoCards = [];
 
 const PHOTO_DESCRIPTIONS = [
   'Современная квартира', 'Подвал', 'Картина', 'Пещера', 'Город', 'Небо', 'Чердак', 'Улица', 'Водопад', 'Сад', 'Океан'
@@ -46,7 +44,7 @@ const getPhotoComments = () => {
   const photoCommentsNumber = getRandomRoundNumber(1, MAX_PHOTO_COMMENTS);
   const photoCommments = [];
   for (let j = 0; j < photoCommentsNumber; j++) {
-    photoCommments[j] = createPhotoCardComment();
+    photoCommments.push(createPhotoCardComment());
   }
   return photoCommments;
 };
@@ -59,10 +57,12 @@ const createPhotoCardDescription = (cardIndex) => ({
   comments: getPhotoComments(),
 });
 
-const createPhotoCards = (cardsAmount) => {
+const createPhotoCardsData = (cardsAmount) => {
+  const photoCardsData = [];
   for (let i = 0; i < cardsAmount; i++) {
-    photoCards[i] = createPhotoCardDescription(i);
+    photoCardsData.push(createPhotoCardDescription(i));
   }
+  return photoCardsData;
 };
 
-createPhotoCards(REQUIRED_PHOTOCARDS);
+export {createPhotoCardsData, REQUIRED_PHOTOCARDS};
