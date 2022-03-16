@@ -2,9 +2,9 @@ import { createPhotoCardsData, REQUIRED_PHOTOCARDS } from './data.js';
 
 const photoContainer = document.querySelector('.pictures');
 const photoPostTemplate = document.querySelector('#picture').content.querySelector('.picture');
-const usersPhotoList = document.createDocumentFragment();
 
 const createPhotoPosts = (photoCardsData) => {
+  const usersPhotoList = document.createDocumentFragment();
   photoCardsData.forEach((photoCard) => {
     const somePhoto = photoPostTemplate.cloneNode(true);
     const photoUrl = somePhoto.querySelector('.picture__img');
@@ -15,11 +15,11 @@ const createPhotoPosts = (photoCardsData) => {
     photoLikes.textContent = photoCard.likes;
     usersPhotoList.append(somePhoto);
   });
+  return usersPhotoList;
 };
 
 const drawUsersPhotos = () => {
-  createPhotoPosts(createPhotoCardsData(REQUIRED_PHOTOCARDS));
-  photoContainer.append(usersPhotoList);
+  photoContainer.append(createPhotoPosts(createPhotoCardsData(REQUIRED_PHOTOCARDS)));
 };
 
 drawUsersPhotos();
