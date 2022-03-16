@@ -2,25 +2,24 @@ import { createPhotoCardsData, REQUIRED_PHOTOCARDS } from './data.js';
 
 const photoContainer = document.querySelector('.pictures');
 const photoPostTemplate = document.querySelector('#picture').content.querySelector('.picture');
-const usersPhotoList = document.createDocumentFragment();
 
-const createPhotoPosts = (PhotoCardsData) => {
-  for (let i = 0; i < PhotoCardsData.length; i++) {
-    const newPhoto = photoPostTemplate.cloneNode(true);
-    const photoImg = newPhoto.querySelector('.picture__img');
-    const photoComments = newPhoto.querySelector('.picture__comments');
-    const photoLikes = newPhoto.querySelector('.picture__likes');
-    photoImg.src = PhotoCardsData[i].url;
-    photoImg.alt = PhotoCardsData[i].description;
-    photoComments.textContent = PhotoCardsData[i].comments.length;
-    photoLikes.textContent = PhotoCardsData[i].likes;
-    usersPhotoList.append(newPhoto);
-  }
+const createPhotoPosts = (photoCardsData) => {
+  const usersPhotoList = document.createDocumentFragment();
+  photoCardsData.forEach((photoCard) => {
+    const somePhoto = photoPostTemplate.cloneNode(true);
+    const photoUrl = somePhoto.querySelector('.picture__img');
+    const photoCcomments = somePhoto.querySelector('.picture__comments');
+    const photoLikes = somePhoto.querySelector('.picture__likes');
+    photoUrl.src = photoCard.url;
+    photoCcomments.textContent = photoCard.comments.length;
+    photoLikes.textContent = photoCard.likes;
+    usersPhotoList.append(somePhoto);
+  });
+  return usersPhotoList;
 };
 
 const drawUsersPhotos = () => {
-  createPhotoPosts(createPhotoCardsData(REQUIRED_PHOTOCARDS));
-  photoContainer.append(usersPhotoList);
+  photoContainer.append(createPhotoPosts(createPhotoCardsData(REQUIRED_PHOTOCARDS)));
 };
 
 drawUsersPhotos();

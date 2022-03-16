@@ -44,7 +44,7 @@ const getPhotoComments = () => {
   const photoCommentsNumber = getRandomRoundNumber(1, MAX_PHOTO_COMMENTS);
   const photoCommments = [];
   for (let j = 0; j < photoCommentsNumber; j++) {
-    photoCommments[j] = createPhotoCardComment();
+    photoCommments.push(createPhotoCardComment());
   }
   return photoCommments;
 };
@@ -58,11 +58,11 @@ const createPhotoCardDescription = (cardIndex) => ({
 });
 
 const createPhotoCardsData = (cardsAmount) => {
-  const PhotoCardsData = [];
+  const photoCardsData = [];
   for (let i = 0; i < cardsAmount; i++) {
-    PhotoCardsData[i] = createPhotoCardDescription(i);
+    photoCardsData.push(createPhotoCardDescription(i));
   }
-  return PhotoCardsData;
+  return photoCardsData;
 };
 
 export {createPhotoCardsData, REQUIRED_PHOTOCARDS};
