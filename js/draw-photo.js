@@ -5,17 +5,16 @@ const photoPostTemplate = document.querySelector('#picture').content.querySelect
 const usersPhotoList = document.createDocumentFragment();
 
 const createPhotoPosts = (photoCardsData) => {
-  for (let i = 0; i < photoCardsData.length; i++) {
-    const newPhoto = photoPostTemplate.cloneNode(true);
-    const photoImg = newPhoto.querySelector('.picture__img');
-    const photoComments = newPhoto.querySelector('.picture__comments');
-    const photoLikes = newPhoto.querySelector('.picture__likes');
-    photoImg.src = photoCardsData[i].url;
-    photoImg.alt = photoCardsData[i].description;
-    photoComments.textContent = photoCardsData[i].comments.length;
-    photoLikes.textContent = photoCardsData[i].likes;
-    usersPhotoList.append(newPhoto);
-  }
+  photoCardsData.forEach((photoCard) => {
+    const somePhoto = photoPostTemplate.cloneNode(true);
+    const photoUrl = somePhoto.querySelector('.picture__img');
+    const photoCcomments = somePhoto.querySelector('.picture__comments');
+    const photoLikes = somePhoto.querySelector('.picture__likes');
+    photoUrl.src = photoCard.url;
+    photoCcomments.textContent = photoCard.comments.length;
+    photoLikes.textContent = photoCard.likes;
+    usersPhotoList.append(somePhoto);
+  });
 };
 
 const drawUsersPhotos = () => {
