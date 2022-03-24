@@ -22,16 +22,40 @@ const resetFormFields = () => {
   uploadFile.value = '';
 };
 
+const onModalHashtagFieldFocus = () => {
+  document.removeEventListener('keydown', onModalEscKeydown);
+};
+
+const onModalHashtagFieldBlur = () => {
+  document.addEventListener('keydown', onModalEscKeydown);
+};
+
+const onModalCommentsFieldFocus = () => {
+  document.removeEventListener('keydown', onModalEscKeydown);
+};
+
+const onModalCommentsFieldBlur = () => {
+  document.addEventListener('keydown', onModalEscKeydown);
+};
+
 function openUploadFileModal () {
   uploadFileOverlay.classList.remove('hidden');
   uploadFileModal.classList.add('modal-open');
   document.addEventListener('keydown', onModalEscKeydown);
+  hashTagsField.addEventListener('focus', onModalHashtagFieldFocus);
+  hashTagsField.addEventListener('blur', onModalHashtagFieldBlur);
+  commentField.addEventListener('focus', onModalCommentsFieldFocus);
+  commentField.addEventListener('blur', onModalCommentsFieldBlur);
 }
 
 function closeUploadFileModal () {
   uploadFileOverlay.classList.add('hidden');
   uploadFileModal.classList.remove('modal-open');
   document.removeEventListener('keydown', onModalEscKeydown);
+  hashTagsField.removeEventListener('focus', onModalHashtagFieldFocus);
+  hashTagsField.removeEventListener('blur', onModalHashtagFieldBlur);
+  commentField.removeEventListener('focus', onModalCommentsFieldFocus);
+  commentField.removeEventListener('blur', onModalCommentsFieldBlur);
   resetFormFields();
 }
 

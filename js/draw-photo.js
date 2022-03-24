@@ -1,6 +1,6 @@
 import { createPhotoCardsData, REQUIRED_PHOTOCARDS } from './data.js';
 
-const photoContainer = document.querySelector('.pictures');
+const photoContainerElement = document.querySelector('.pictures');
 const photoPostTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 const createPhotoPosts = (photoCardsData) => {
@@ -19,7 +19,7 @@ const createPhotoPosts = (photoCardsData) => {
 };
 
 const drawUsersPhotos = () => {
-  photoContainer.append(createPhotoPosts(createPhotoCardsData(REQUIRED_PHOTOCARDS)));
+  photoContainerElement.append(createPhotoPosts(createPhotoCardsData(REQUIRED_PHOTOCARDS)));
 };
 
 drawUsersPhotos();
