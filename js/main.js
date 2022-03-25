@@ -1,3 +1,5 @@
-import 'js/util.js';
-import 'js/data.js';
-import 'js/draw-photo.js';
+import './util.js';
+import './upload-modal.js';
+import './data.js';
+import './draw-photo.js';
+import './upload-form.js';

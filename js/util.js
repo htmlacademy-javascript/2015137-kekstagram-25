@@ -1,3 +1,5 @@
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
 const getRandomRoundNumber = (firstNumber, secondNumber) => {
   if (firstNumber < 0 || secondNumber < 0) {
     return;
@@ -19,4 +21,4 @@ const getRandomArrayElement = (elements) => elements[getRandomRoundNumber(0, ele
 
 checkStringLength('some', 10);
 
-export {getRandomRoundNumber, getRandomArrayElement,};
+export {getRandomRoundNumber, getRandomArrayElement, isEscapeKey};

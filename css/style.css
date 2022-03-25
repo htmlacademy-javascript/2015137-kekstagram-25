@@ -1293,6 +1293,12 @@ main {
   opacity: 0.6;
 }
 
+.img-upload__hashtag__error {
+  position: relative;
+  display: block;
+  color: #e90000;
+  font-size: 18px;
+}
 
 /**
  * Экран загрузки изображения
