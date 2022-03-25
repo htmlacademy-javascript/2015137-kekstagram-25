@@ -13,15 +13,8 @@ const pristine = new Pristine(uploadForm, {
 });
 
 const checkElementDublicates = (elements) => {
-  const currentArray = elements.slice();
-  for (let i = 0; i < elements.length; i++) {
-    const currentElement = currentArray.shift();
-    if (currentArray.includes(currentElement)) {
-      return false;
-    }
-    currentArray.push(currentElement);
-  }
-  return true;
+  const uniqHashtags = new Set(elements);
+  return (elements.length === uniqHashtags.size);
 };
 
 const checkEachElementPattern = (elements) => {
@@ -47,7 +40,6 @@ pristine.addValidator(uploadForm.querySelector('.text__hashtags'),
   validateHashTags,
   getHashtagsErrorMessage
 );
-
 
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
