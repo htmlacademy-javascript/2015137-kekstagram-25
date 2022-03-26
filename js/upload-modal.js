@@ -6,6 +6,7 @@ const uploadFileModal = document.querySelector('body');
 const uploadFileCancel = document.querySelector('#upload-cancel');
 const hashTagsField = document.querySelector('.text__hashtags');
 const commentField = document.querySelector('.text__description');
+const photoEffectImage = document.querySelector('.img-upload__preview');
 const effectNoneCheckbox = document.querySelector('#effect-none');
 const scaleControlButtonIncrease = document.querySelector('.scale__control--bigger');
 const scaleControlButtonDecrease = document.querySelector('.scale__control--smaller');
@@ -21,33 +22,52 @@ const photoEffectHeat = document.querySelector('#effect-heat');
 const MAX_SCALE_VALUE = 100;
 const MIN_SCALE_VALUE = 25;
 
-noUiSlider.create(intensitySliderElement, {
-  range: {
-    min: 0,
-    max: 100,
-  },
-  start: 100,
-  step: 1,
-  connect: 'lower',
-});
+const createSlider = () => {
+  intensitySliderElement.style.display = 'none';
+  noUiSlider.create(intensitySliderElement, {
+    range: {
+      min: 0,
+      max: 100,
+    },
+    start: 100,
+    step: 1,
+    connect: 'lower',
+  });
+};
 
-intensitySliderElement.noUiSlider.on('update', () => {
-  sliderElementInputValue.value = intensitySliderElement.noUiSlider.get();
-});
+const removeSlider = () => {
+  intensitySliderElement.noUiSlider.destroy();
+};
+
+const attachSliderToInput = () => {
+  intensitySliderElement.noUiSlider.on('update', () => {
+    sliderElementInputValue.value = intensitySliderElement.noUiSlider.get();
+  });
+};
+
+const removeSliderToInput = () => {
+  intensitySliderElement.noUiSlider.off('update');
+};
+
+const changePreviewImageScale = () => {
+  photoEffectImage.style.transform = `scale(${parseInt(scaleControlInputValue.value, 10) / 100})`;
+};
+
+const resetImageFilter = () => {
+  photoEffectImage.className = 'img-upload__preview';
+  intensitySliderElement.style.display = 'block';
+};
 
 const onPhotoEffectNoneClick = (evt) => {
+  resetImageFilter();
   if (evt.target.checked) {
-    intensitySliderElement.noUiSlider.updateOptions({
-      range: {
-        min: 1,
-        max: 10,
-      },
-      step: 0.1,
-    });
+    intensitySliderElement.style.display = 'none';
+    photoEffectImage.style.filter = 'none';
   }
 };
 
 const onPhotoEffectChromeClick = (evt) => {
+  resetImageFilter();
   if (evt.target.checked) {
     intensitySliderElement.noUiSlider.updateOptions({
       range: {
@@ -55,11 +75,14 @@ const onPhotoEffectChromeClick = (evt) => {
         max: 10,
       },
       step: 0.1,
+      connect: 'lower',
     });
+    photoEffectImage.classList.add('effects__preview--chrome');
   }
 };
 
 const onPhotoEffectSepiaClick = (evt) => {
+  resetImageFilter();
   if (evt.target.checked) {
     intensitySliderElement.noUiSlider.updateOptions({
       range: {
@@ -67,11 +90,14 @@ const onPhotoEffectSepiaClick = (evt) => {
         max: 10,
       },
       step: 0.1,
+      connect: 'lower',
     });
+    photoEffectImage.classList.add('effects__preview--sepia');
   }
 };
 
 const onPhotoEffectMarvinClick = (evt) => {
+  resetImageFilter();
   if (evt.target.checked) {
     intensitySliderElement.noUiSlider.updateOptions({
       range: {
@@ -79,11 +105,14 @@ const onPhotoEffectMarvinClick = (evt) => {
         max: 10,
       },
       step: 0.1,
+      connect: 'lower',
     });
+    photoEffectImage.classList.add('effects__preview--marvin');
   }
 };
 
 const onPhotoEffectPhobosClick = (evt) => {
+  resetImageFilter();
   if (evt.target.checked) {
     intensitySliderElement.noUiSlider.updateOptions({
       range: {
@@ -91,11 +120,14 @@ const onPhotoEffectPhobosClick = (evt) => {
         max: 10,
       },
       step: 0.1,
+      connect: 'lower',
     });
+    photoEffectImage.classList.add('effects__preview--phobos');
   }
 };
 
 const onPhotoEffectHeatClick = (evt) => {
+  resetImageFilter();
   if (evt.target.checked) {
     intensitySliderElement.noUiSlider.updateOptions({
       range: {
@@ -103,7 +135,9 @@ const onPhotoEffectHeatClick = (evt) => {
         max: 10,
       },
       step: 0.1,
+      connect: 'lower',
     });
+    photoEffectImage.classList.add('effects__preview--heat');
   }
 };
 
@@ -125,6 +159,7 @@ const onScaleControlIncreaseClick = () => {
   const parsedScaleValue = parseInt(scaleControlInputValue.value, 10);
   if (parsedScaleValue !== MAX_SCALE_VALUE) {
     scaleControlInputValue.value = `${parsedScaleValue + 25  }%`;
+    changePreviewImageScale();
   }
 };
 
@@ -132,6 +167,7 @@ const onScaleControlDecreaseClick = () => {
   const parsedScaleValue = parseInt(scaleControlInputValue.value, 10);
   if (parsedScaleValue !== MIN_SCALE_VALUE) {
     scaleControlInputValue.value = `${parsedScaleValue - 25  }%`;
+    changePreviewImageScale();
   }
 };
 
@@ -155,6 +191,8 @@ function openUploadFileModal () {
   uploadFileOverlay.classList.remove('hidden');
   uploadFileModal.classList.add('modal-open');
   document.addEventListener('keydown', onModalEscKeydown);
+  createSlider();
+  attachSliderToInput();
   scaleControlButtonIncrease.addEventListener('click', onScaleControlIncreaseClick);
   scaleControlButtonDecrease.addEventListener('click', onScaleControlDecreaseClick);
   photoEffectNone.addEventListener('change', onPhotoEffectNoneClick);
@@ -185,6 +223,8 @@ function closeUploadFileModal () {
   hashTagsField.removeEventListener('blur', onModalHashtagFieldBlur);
   commentField.removeEventListener('focus', onModalCommentsFieldFocus);
   commentField.removeEventListener('blur', onModalCommentsFieldBlur);
+  removeSliderToInput();
+  removeSlider();
   resetFormFields();
 }
 
