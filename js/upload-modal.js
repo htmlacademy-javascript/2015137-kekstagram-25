@@ -13,6 +13,7 @@ const scaleControlButtonDecrease = document.querySelector('.scale__control--smal
 const scaleControlInput = document.querySelector('.scale__control--value');
 const intensitySliderElement = document.querySelector('.effect-level__slider');
 const sliderElementInputValue = document.querySelector('.effect-level__value');
+const photoEffectRadioButtons = document.querySelectorAll('.effects__radio');
 const photoEffectNone = document.querySelector('#effect-none');
 const photoEffectChrome = document.querySelector('#effect-chrome');
 const photoEffectSepia = document.querySelector('#effect-sepia');
@@ -21,16 +22,27 @@ const photoEffectPhobos = document.querySelector('#effect-phobos');
 const photoEffectHeat = document.querySelector('#effect-heat');
 const MAX_SCALE_VALUE = 100;
 const MIN_SCALE_VALUE = 25;
+const MAX_RANGE = 3;
+const MIN_STEP = 0.1;
+const DECIMAL = 10;
+const PhotoFilter = {
+  NONE: 'none',
+  CHROME: 'grayscale',
+  SEPIA: 'sepia',
+  MARVIN: 'invert',
+  PHOBOS: 'blur',
+  HEAT: 'brightness',
+};
 
 const createSlider = () => {
   intensitySliderElement.style.display = 'none';
   noUiSlider.create(intensitySliderElement, {
     range: {
       min: 0,
-      max: 100,
+      max: 1,
     },
-    start: 100,
-    step: 1,
+    start: MIN_STEP,
+    step: MIN_STEP,
     connect: 'lower',
     format: {
       to: function (value) {
@@ -62,31 +74,31 @@ const removeSliderToInput = () => {
 
 const setChromeIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `grayscale(${sliderElementInputValue.value})`;
+    photoEffectImage.style.filter = `${PhotoFilter.CHROME}(${sliderElementInputValue.value})`;
   });
 };
 
 const setSepiaIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `sepia(${sliderElementInputValue.value})`;
+    photoEffectImage.style.filter = `${PhotoFilter.SEPIA}(${sliderElementInputValue.value})`;
   });
 };
 
 const setMarvinIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `invert(${sliderElementInputValue.value}%)`;
+    photoEffectImage.style.filter = `${PhotoFilter.MARVIN}(${sliderElementInputValue.value}%)`;
   });
 };
 
 const setPhobosIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `blur(${sliderElementInputValue.value}px)`;
+    photoEffectImage.style.filter = `${PhotoFilter.PHOBOS}(${sliderElementInputValue.value}px)`;
   });
 };
 
 const setHeatIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `brightness(${sliderElementInputValue.value})`;
+    photoEffectImage.style.filter = `${PhotoFilter.HEAT}(${sliderElementInputValue.value})`;
   });
 };
 
@@ -97,91 +109,91 @@ const resetImageFilter = () => {
   intensitySliderElement.noUiSlider.off('update.filter');
 };
 
-const onPhotoEffectNoneClick = (evt) => {
+const PhotoEffectChromeApply = () => {
+  intensitySliderElement.noUiSlider.updateOptions({
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: MIN_STEP,
+  });
+  photoEffectImage.classList.add('effects__preview--chrome');
+  setChromeIntensity();
+};
+
+const PhotoEffectSepiaApply = () => {
+  intensitySliderElement.noUiSlider.updateOptions({
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: MIN_STEP,
+  });
+  photoEffectImage.classList.add('effects__preview--sepia');
+  setSepiaIntensity();
+};
+
+const PhotoEffectMarvinApply = () => {
+  intensitySliderElement.noUiSlider.updateOptions({
+    range: {
+      min: 0,
+      max: MAX_SCALE_VALUE,
+    },
+    start: MAX_SCALE_VALUE,
+    step: 1,
+  });
+  photoEffectImage.classList.add('effects__preview--marvin');
+  setMarvinIntensity();
+};
+
+const PhotoEffectPhobosApply = () => {
+  intensitySliderElement.noUiSlider.updateOptions({
+    range: {
+      min: 0,
+      max: MAX_RANGE,
+    },
+    start: MAX_RANGE,
+    step: MIN_STEP,
+  });
+  photoEffectImage.classList.add('effects__preview--phobos');
+  setPhobosIntensity();
+};
+
+const PhotoEffectHeatApply = () => {
+  intensitySliderElement.noUiSlider.updateOptions({
+    range: {
+      min: 1,
+      max: MAX_RANGE,
+    },
+    start: MAX_RANGE,
+    step: MIN_STEP,
+  });
+  photoEffectImage.classList.add('effects__preview--heat');
+  setHeatIntensity();
+};
+
+const onPhotoEffectClick = (evt) => {
   resetImageFilter();
-  if (evt.target.checked) {
+  if (evt.target.value === photoEffectNone.value) {
     intensitySliderElement.style.display = 'none';
     photoEffectImage.style.filter = '';
   }
-};
-
-const onPhotoEffectChromeClick = (evt) => {
-  resetImageFilter();
-  if (evt.target.checked) {
-    intensitySliderElement.noUiSlider.updateOptions({
-      range: {
-        min: 0,
-        max: 1,
-      },
-      start: 1,
-      step: 0.1,
-    });
-    photoEffectImage.classList.add('effects__preview--chrome');
-    setChromeIntensity();
+  if (evt.target.value === photoEffectChrome.value) {
+    PhotoEffectChromeApply();
   }
-};
-
-const onPhotoEffectSepiaClick = (evt) => {
-  resetImageFilter();
-  if (evt.target.checked) {
-    intensitySliderElement.noUiSlider.updateOptions({
-      range: {
-        min: 0,
-        max: 1,
-      },
-      start: 1,
-      step: 0.1,
-    });
-    photoEffectImage.classList.add('effects__preview--sepia');
-    setSepiaIntensity();
+  if (evt.target.value === photoEffectSepia.value) {
+    PhotoEffectSepiaApply();
   }
-};
-
-const onPhotoEffectMarvinClick = (evt) => {
-  resetImageFilter();
-  if (evt.target.checked) {
-    intensitySliderElement.noUiSlider.updateOptions({
-      range: {
-        min: 0,
-        max: 100,
-      },
-      start: 100,
-      step: 1,
-    });
-    photoEffectImage.classList.add('effects__preview--marvin');
-    setMarvinIntensity();
+  if (evt.target.value === photoEffectMarvin.value) {
+    PhotoEffectMarvinApply();
   }
-};
-
-const onPhotoEffectPhobosClick = (evt) => {
-  resetImageFilter();
-  if (evt.target.checked) {
-    intensitySliderElement.noUiSlider.updateOptions({
-      range: {
-        min: 0,
-        max: 3,
-      },
-      start: 3,
-      step: 0.1,
-    });
-    photoEffectImage.classList.add('effects__preview--phobos');
-    setPhobosIntensity();
+  if (evt.target.value === photoEffectPhobos.value) {
+    PhotoEffectPhobosApply();
   }
-};
-
-const onPhotoEffectHeatClick = (evt) => {
-  resetImageFilter();
-  if (evt.target.checked) {
-    intensitySliderElement.noUiSlider.updateOptions({
-      range: {
-        min: 1,
-        max: 3,
-      },
-      start: 3,
-      step: 0.1,
-    });
-    photoEffectImage.classList.add('effects__preview--heat');
-    setHeatIntensity();
+  if (evt.target.value === photoEffectHeat.value) {
+    PhotoEffectHeatApply();
   }
 };
 
@@ -200,7 +212,7 @@ const resetFormFields = () => {
 };
 
 const changePreviewImageScale = () => {
-  photoEffectImage.style.transform = `scale(${parseInt(scaleControlInput.value, 10) / 100})`;
+  photoEffectImage.style.transform = `scale(${parseInt(scaleControlInput.value, DECIMAL) / MAX_SCALE_VALUE})`;
 };
 
 const resetPreviewImageScale = () => {
@@ -209,17 +221,17 @@ const resetPreviewImageScale = () => {
 };
 
 const onScaleControlIncreaseClick = () => {
-  const parsedScaleValue = parseInt(scaleControlInput.value, 10);
+  const parsedScaleValue = parseInt(scaleControlInput.value, DECIMAL);
   if (parsedScaleValue !== MAX_SCALE_VALUE) {
-    scaleControlInput.value = `${parsedScaleValue + 25  }%`;
+    scaleControlInput.value = `${parsedScaleValue + MIN_SCALE_VALUE  }%`;
     changePreviewImageScale();
   }
 };
 
 const onScaleControlDecreaseClick = () => {
-  const parsedScaleValue = parseInt(scaleControlInput.value, 10);
+  const parsedScaleValue = parseInt(scaleControlInput.value, DECIMAL);
   if (parsedScaleValue !== MIN_SCALE_VALUE) {
-    scaleControlInput.value = `${parsedScaleValue - 25  }%`;
+    scaleControlInput.value = `${parsedScaleValue - MIN_SCALE_VALUE  }%`;
     changePreviewImageScale();
   }
 };
@@ -248,12 +260,7 @@ function openUploadFileModal () {
   attachSliderToInput();
   scaleControlButtonIncrease.addEventListener('click', onScaleControlIncreaseClick);
   scaleControlButtonDecrease.addEventListener('click', onScaleControlDecreaseClick);
-  photoEffectNone.addEventListener('change', onPhotoEffectNoneClick);
-  photoEffectChrome.addEventListener('change', onPhotoEffectChromeClick);
-  photoEffectSepia.addEventListener('change', onPhotoEffectSepiaClick);
-  photoEffectMarvin.addEventListener('change', onPhotoEffectMarvinClick);
-  photoEffectPhobos.addEventListener('change', onPhotoEffectPhobosClick);
-  photoEffectHeat.addEventListener('change', onPhotoEffectHeatClick);
+  photoEffectRadioButtons.forEach((radio) => radio.addEventListener('change', onPhotoEffectClick));
   hashTagsField.addEventListener('focus', onModalHashtagFieldFocus);
   hashTagsField.addEventListener('blur', onModalHashtagFieldBlur);
   commentField.addEventListener('focus', onModalCommentsFieldFocus);
@@ -264,14 +271,6 @@ function closeUploadFileModal () {
   uploadFileOverlay.classList.add('hidden');
   uploadFileModal.classList.remove('modal-open');
   document.removeEventListener('keydown', onModalEscKeydown);
-  scaleControlButtonIncrease.removeEventListener('click', onScaleControlIncreaseClick);
-  scaleControlButtonDecrease.removeEventListener('click', onScaleControlDecreaseClick);
-  photoEffectNone.removeEventListener('change', onPhotoEffectNoneClick);
-  photoEffectChrome.removeEventListener('change', onPhotoEffectChromeClick);
-  photoEffectSepia.removeEventListener('change', onPhotoEffectSepiaClick);
-  photoEffectMarvin.removeEventListener('change', onPhotoEffectMarvinClick);
-  photoEffectPhobos.removeEventListener('change', onPhotoEffectPhobosClick);
-  photoEffectHeat.removeEventListener('change', onPhotoEffectHeatClick);
   hashTagsField.removeEventListener('focus', onModalHashtagFieldFocus);
   hashTagsField.removeEventListener('blur', onModalHashtagFieldBlur);
   commentField.removeEventListener('focus', onModalCommentsFieldFocus);
