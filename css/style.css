@@ -1306,6 +1306,12 @@ main {
   opacity: 0.6;
 }
 
+.img-upload__hashtag__error {
+  position: relative;
+  display: block;
+  font-size: 18;
+  color: #ff4e4e;
+}
 
 /**
  * Экран загрузки изображения
