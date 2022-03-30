@@ -13,7 +13,7 @@ const scaleControlButtonDecrease = document.querySelector('.scale__control--smal
 const scaleControlInput = document.querySelector('.scale__control--value');
 const intensitySliderElement = document.querySelector('.effect-level__slider');
 const sliderElementInputValue = document.querySelector('.effect-level__value');
-const photoEffectRadioButtons = document.querySelectorAll('.effects__radio');
+const radioButtonsFieldSet = document.querySelector('.img-upload__effects');
 const photoEffectNone = document.querySelector('#effect-none');
 const photoEffectChrome = document.querySelector('#effect-chrome');
 const photoEffectSepia = document.querySelector('#effect-sepia');
@@ -260,7 +260,7 @@ function openUploadFileModal () {
   attachSliderToInput();
   scaleControlButtonIncrease.addEventListener('click', onScaleControlIncreaseClick);
   scaleControlButtonDecrease.addEventListener('click', onScaleControlDecreaseClick);
-  photoEffectRadioButtons.forEach((radio) => radio.addEventListener('change', onPhotoEffectClick));
+  radioButtonsFieldSet.addEventListener('change', onPhotoEffectClick);
   hashTagsField.addEventListener('focus', onModalHashtagFieldFocus);
   hashTagsField.addEventListener('blur', onModalHashtagFieldBlur);
   commentField.addEventListener('focus', onModalCommentsFieldFocus);
