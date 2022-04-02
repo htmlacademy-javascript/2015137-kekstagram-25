@@ -1313,6 +1313,17 @@ main {
   color: #ff4e4e;
 }
 
+.users-data__download__error {
+  z-index: 100;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  padding: 10px 3px;
+  font-size: 20px;
+  text-align: center;
+  background-color: #a83232;
+}
 /**
  * Экран загрузки изображения
  */
