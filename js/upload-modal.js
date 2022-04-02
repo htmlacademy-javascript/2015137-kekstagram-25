@@ -109,7 +109,7 @@ const resetImageFilter = () => {
   intensitySliderElement.noUiSlider.off('update.filter');
 };
 
-const PhotoEffectChromeApply = () => {
+const photoEffectChromeApply = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -122,7 +122,7 @@ const PhotoEffectChromeApply = () => {
   setChromeIntensity();
 };
 
-const PhotoEffectSepiaApply = () => {
+const photoEffectSepiaApply = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -135,7 +135,7 @@ const PhotoEffectSepiaApply = () => {
   setSepiaIntensity();
 };
 
-const PhotoEffectMarvinApply = () => {
+const photoEffectMarvinApply = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -148,7 +148,7 @@ const PhotoEffectMarvinApply = () => {
   setMarvinIntensity();
 };
 
-const PhotoEffectPhobosApply = () => {
+const photoEffectPhobosApply = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -161,7 +161,7 @@ const PhotoEffectPhobosApply = () => {
   setPhobosIntensity();
 };
 
-const PhotoEffectHeatApply = () => {
+const photoEffectHeatApply = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 1,
@@ -176,24 +176,31 @@ const PhotoEffectHeatApply = () => {
 
 const onPhotoEffectClick = (evt) => {
   resetImageFilter();
-  if (evt.target.value === photoEffectNone.value) {
-    intensitySliderElement.style.display = 'none';
-    photoEffectImage.style.filter = '';
-  }
-  if (evt.target.value === photoEffectChrome.value) {
-    PhotoEffectChromeApply();
-  }
-  if (evt.target.value === photoEffectSepia.value) {
-    PhotoEffectSepiaApply();
-  }
-  if (evt.target.value === photoEffectMarvin.value) {
-    PhotoEffectMarvinApply();
-  }
-  if (evt.target.value === photoEffectPhobos.value) {
-    PhotoEffectPhobosApply();
-  }
-  if (evt.target.value === photoEffectHeat.value) {
-    PhotoEffectHeatApply();
+  switch (evt.target.value) {
+    case (photoEffectChrome.value):
+      photoEffectChromeApply();
+    break
+
+    case (photoEffectSepia.value):
+      photoEffectSepiaApply();
+    break
+
+    case (photoEffectMarvin.value): 
+      photoEffectMarvinApply();
+    break
+
+    case (photoEffectPhobos.value):
+      photoEffectPhobosApply();
+    break
+
+    case (photoEffectHeat.value):
+      photoEffectHeatApply();
+    break
+    
+    default:
+      intensitySliderElement.style.display = 'none';
+      photoEffectImage.style.filter = '';
+    break
   }
 };
 
@@ -289,4 +296,3 @@ uploadFile.addEventListener('change', () => {
 uploadFileCancel.addEventListener('click', () => {
   closeUploadFileModal();
 });
-
