@@ -1,9 +1,12 @@
 import { isEscapeKey } from './util.js';
+import { checkUserForm } from './upload-form.js';
 
 const uploadFile = document.querySelector('#upload-file');
 const uploadFileOverlay = document.querySelector('.img-upload__overlay');
 const uploadFileModal = document.querySelector('body');
 const uploadFileCancel = document.querySelector('#upload-cancel');
+const successUploadTemplate = document.querySelector('#success').content.querySelector('.success');
+const errorUploadTemplate = document.querySelector('#error').content.querySelector('.error');
 const hashTagsField = document.querySelector('.text__hashtags');
 const commentField = document.querySelector('.text__description');
 const photoEffectImage = document.querySelector('.img-upload__preview');
@@ -14,7 +17,6 @@ const scaleControlInput = document.querySelector('.scale__control--value');
 const intensitySliderElement = document.querySelector('.effect-level__slider');
 const sliderElementInputValue = document.querySelector('.effect-level__value');
 const radioButtonsFieldSet = document.querySelector('.img-upload__effects');
-const photoEffectNone = document.querySelector('#effect-none');
 const photoEffectChrome = document.querySelector('#effect-chrome');
 const photoEffectSepia = document.querySelector('#effect-sepia');
 const photoEffectMarvin = document.querySelector('#effect-marvin');
@@ -196,7 +198,7 @@ const onPhotoEffectClick = (evt) => {
     case (photoEffectHeat.value):
       photoEffectHeatApply();
     break
-    
+
     default:
       intensitySliderElement.style.display = 'none';
       photoEffectImage.style.filter = '';
@@ -208,6 +210,20 @@ const onModalEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeUploadFileModal();
+  }
+};
+
+const onSuccessEscKeydown = (evt) => { 
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeSuccessUploadModal();
+  }
+};
+
+const onErrorEscKeydown = (evt) => { 
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeErrorUploadModal();
   }
 };
 
@@ -272,6 +288,7 @@ function openUploadFileModal () {
   hashTagsField.addEventListener('blur', onModalHashtagFieldBlur);
   commentField.addEventListener('focus', onModalCommentsFieldFocus);
   commentField.addEventListener('blur', onModalCommentsFieldBlur);
+  checkUserForm(closeUploadFileModal);
 }
 
 function closeUploadFileModal () {
@@ -289,6 +306,54 @@ function closeUploadFileModal () {
   resetFormFields();
 }
 
+const onClickOutsideSuccessModal = (evt) => {
+  const currentElement = evt.target;
+  if (!currentElement.closest('.success__inner')) {
+    closeSuccessUploadModal();
+  }
+};
+
+function openSuccessUploadModal () {
+  const successModal = successUploadTemplate.cloneNode(true);
+  const closeButton = successModal.querySelector('.success__button');
+  document.removeEventListener('keydown', onModalEscKeydown);
+  closeButton.addEventListener('click', closeSuccessUploadModal)
+  document.addEventListener('keydown', onSuccessEscKeydown);
+  document.addEventListener('click', onClickOutsideSuccessModal);
+  document.body.appendChild(successModal);
+};
+
+function closeSuccessUploadModal () {
+  document.removeEventListener('keydown', onSuccessEscKeydown);
+  document.removeEventListener('click', onClickOutsideSuccessModal);
+  document.addEventListener('keydown', onModalEscKeydown);
+  document.body.lastChild.remove();
+};
+
+const onClickOutsideErrorModal = (evt) => {
+  const currentElement = evt.target;
+  if (!currentElement.closest('.error__inner')) {
+    closeErrorUploadModal();
+  }
+};
+
+function openErrorUploadModal () {
+  const errorModal = errorUploadTemplate.cloneNode(true);
+  const closeButton = errorModal.querySelector('.error__button');
+  document.removeEventListener('keydown', onModalEscKeydown);
+  closeButton.addEventListener('click', closeErrorUploadModal)
+  document.addEventListener('keydown', onErrorEscKeydown);
+  document.addEventListener('click', onClickOutsideErrorModal);
+  document.body.appendChild(errorModal);
+};
+
+function closeErrorUploadModal () {
+  document.removeEventListener('keydown', onErrorEscKeydown);
+  document.removeEventListener('click', onClickOutsideErrorModal);
+  document.addEventListener('keydown', onModalEscKeydown);
+  document.body.lastChild.remove();
+};
+
 uploadFile.addEventListener('change', () => {
   openUploadFileModal();
 });
@@ -296,3 +361,5 @@ uploadFile.addEventListener('change', () => {
 uploadFileCancel.addEventListener('click', () => {
   closeUploadFileModal();
 });
+
+export {openErrorUploadModal, openSuccessUploadModal};
