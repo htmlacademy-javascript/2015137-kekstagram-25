@@ -186,7 +186,7 @@ const onPhotoEffectClick = (evt) => {
     case (photoEffectSepia.value):
       photoEffectSepiaApply();
       break;
-    case (photoEffectMarvin.value): 
+    case (photoEffectMarvin.value):
       photoEffectMarvinApply();
       break;
     case (photoEffectPhobos.value):
@@ -209,14 +209,14 @@ const onModalEscKeydown = (evt) => {
   }
 };
 
-const onSuccessEscKeydown = (evt) => { 
+const onSuccessEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeSuccessUploadModal();
   }
 };
 
-const onErrorEscKeydown = (evt) => { 
+const onErrorEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeErrorUploadModal();

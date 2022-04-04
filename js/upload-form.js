@@ -61,7 +61,7 @@ const checkUserForm = () => {
         () => {
           closeLoadingMessage();
           openErrorUploadModal();
-        }, 
+        },
         new FormData(evt.target)
       );
     }
