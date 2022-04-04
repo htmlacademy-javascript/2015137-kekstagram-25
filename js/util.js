@@ -20,9 +20,9 @@ const checkStringLength = (string, maxLength) => (string.length <= maxLength);
 
 const getRandomArrayElement = (elements) => elements[getRandomRoundNumber(0, elements.length - 1)];
 
-const showDowloadErrorMessage = (errorText) => {
+const showLoadErrorMessage = (errorText) => {
   const errorContainer = document.createElement('div');
-  errorContainer.classList.add('.user-data__download__error');
+  errorContainer.classList.add('.user-data__load__error');
   errorContainer.textContent = errorText;
   document.body.append(errorContainer);
   setTimeout(() => {
@@ -32,4 +32,4 @@ const showDowloadErrorMessage = (errorText) => {
 
 checkStringLength('some', 10);
 
-export {getRandomRoundNumber, getRandomArrayElement, isEscapeKey, showDowloadErrorMessage};
+export {getRandomRoundNumber, getRandomArrayElement, isEscapeKey, showLoadErrorMessage};

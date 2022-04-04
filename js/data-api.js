@@ -31,9 +31,7 @@ const uploadUserData = (onSuccess, onError, userForm) => {
         onError();
       }
     })
-    .catch((err) => {
-      onError(err);
-    });
+    .catch((err) => onError(err));
 };
 
 export {getUsersData, uploadUserData};

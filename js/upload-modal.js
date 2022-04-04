@@ -7,6 +7,7 @@ const uploadFileModal = document.querySelector('body');
 const uploadFileCancel = document.querySelector('#upload-cancel');
 const successUploadTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorUploadTemplate = document.querySelector('#error').content.querySelector('.error');
+const submitButton = document.querySelector('.img-upload__submit');
 const hashTagsField = document.querySelector('.text__hashtags');
 const commentField = document.querySelector('.text__description');
 const photoEffectImage = document.querySelector('.img-upload__preview');
@@ -288,7 +289,7 @@ function openUploadFileModal () {
   hashTagsField.addEventListener('blur', onModalHashtagFieldBlur);
   commentField.addEventListener('focus', onModalCommentsFieldFocus);
   commentField.addEventListener('blur', onModalCommentsFieldBlur);
-  checkUserForm(closeUploadFileModal);
+  checkUserForm();
 }
 
 function closeUploadFileModal () {
@@ -306,6 +307,16 @@ function closeUploadFileModal () {
   resetFormFields();
 }
 
+const showLoadingMessage = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Загружаем';
+};
+
+const closeLoadingMessage = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
 const onClickOutsideSuccessModal = (evt) => {
   const currentElement = evt.target;
   if (!currentElement.closest('.success__inner')) {
@@ -314,9 +325,9 @@ const onClickOutsideSuccessModal = (evt) => {
 };
 
 function openSuccessUploadModal () {
+  closeUploadFileModal();
   const successModal = successUploadTemplate.cloneNode(true);
   const closeButton = successModal.querySelector('.success__button');
-  document.removeEventListener('keydown', onModalEscKeydown);
   closeButton.addEventListener('click', closeSuccessUploadModal)
   document.addEventListener('keydown', onSuccessEscKeydown);
   document.addEventListener('click', onClickOutsideSuccessModal);
@@ -326,7 +337,6 @@ function openSuccessUploadModal () {
 function closeSuccessUploadModal () {
   document.removeEventListener('keydown', onSuccessEscKeydown);
   document.removeEventListener('click', onClickOutsideSuccessModal);
-  document.addEventListener('keydown', onModalEscKeydown);
   document.body.lastChild.remove();
 };
 
@@ -338,9 +348,9 @@ const onClickOutsideErrorModal = (evt) => {
 };
 
 function openErrorUploadModal () {
+  closeUploadFileModal();
   const errorModal = errorUploadTemplate.cloneNode(true);
   const closeButton = errorModal.querySelector('.error__button');
-  document.removeEventListener('keydown', onModalEscKeydown);
   closeButton.addEventListener('click', closeErrorUploadModal)
   document.addEventListener('keydown', onErrorEscKeydown);
   document.addEventListener('click', onClickOutsideErrorModal);
@@ -350,7 +360,6 @@ function openErrorUploadModal () {
 function closeErrorUploadModal () {
   document.removeEventListener('keydown', onErrorEscKeydown);
   document.removeEventListener('click', onClickOutsideErrorModal);
-  document.addEventListener('keydown', onModalEscKeydown);
   document.body.lastChild.remove();
 };
 
@@ -362,4 +371,4 @@ uploadFileCancel.addEventListener('click', () => {
   closeUploadFileModal();
 });
 
-export {openErrorUploadModal, openSuccessUploadModal};
+export {openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage};

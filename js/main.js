@@ -5,6 +5,6 @@ import './draw-photo.js';
 import './upload-form.js';
 import { getUsersData } from './data-api.js';
 import { createPhotoPosts } from './draw-photo.js';
-import { showDowloadErrorMessage } from './util.js';
+import { showLoadErrorMessage } from './util.js';
 
-getUsersData(createPhotoPosts, showDowloadErrorMessage);
+getUsersData(createPhotoPosts, showLoadErrorMessage);
