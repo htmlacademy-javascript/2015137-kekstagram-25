@@ -29,12 +29,12 @@ const MAX_RANGE = 3;
 const MIN_STEP = 0.1;
 const DECIMAL = 10;
 const PhotoFilter = {
-  NONE: 'none',
-  CHROME: 'grayscale',
-  SEPIA: 'sepia',
-  MARVIN: 'invert',
-  PHOBOS: 'blur',
-  HEAT: 'brightness',
+  NONE: {name: 'none', units: ''},
+  CHROME: {name: 'grayscale', units: ''},
+  SEPIA: {name: 'sepia', units: ''},
+  MARVIN: {name: 'invert', units: '%'},
+  PHOBOS: {name: 'blur', units: 'px'},
+  HEAT: {name: 'brightness', units: ''}
 };
 
 const createSlider = () => {
@@ -77,31 +77,31 @@ const removeSliderToInput = () => {
 
 const setChromeIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.CHROME}(${sliderElementInputValue.value})`;
+    photoEffectImage.style.filter = `${PhotoFilter.CHROME.name}(${sliderElementInputValue.value}${PhotoFilter.CHROME.units})`;
   });
 };
 
 const setSepiaIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.SEPIA}(${sliderElementInputValue.value})`;
+    photoEffectImage.style.filter = `${PhotoFilter.SEPIA.name}(${sliderElementInputValue.value}${PhotoFilter.SEPIA.units})`;
   });
 };
 
 const setMarvinIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.MARVIN}(${sliderElementInputValue.value}%)`;
+    photoEffectImage.style.filter = `${PhotoFilter.MARVIN.name}(${sliderElementInputValue.value}${PhotoFilter.MARVIN.units})`;
   });
 };
 
 const setPhobosIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.PHOBOS}(${sliderElementInputValue.value}px)`;
+    photoEffectImage.style.filter = `${PhotoFilter.PHOBOS.name}(${sliderElementInputValue.value}${PhotoFilter.PHOBOS.units})`;
   });
 };
 
 const setHeatIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.HEAT}(${sliderElementInputValue.value})`;
+    photoEffectImage.style.filter = `${PhotoFilter.HEAT.name}(${sliderElementInputValue.value}${PhotoFilter.HEAT.units})`;
   });
 };
 
