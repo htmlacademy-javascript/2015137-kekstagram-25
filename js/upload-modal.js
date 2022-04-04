@@ -1,9 +1,13 @@
 import { isEscapeKey } from './util.js';
+import { checkUserForm } from './upload-form.js';
 
 const uploadFile = document.querySelector('#upload-file');
 const uploadFileOverlay = document.querySelector('.img-upload__overlay');
 const uploadFileModal = document.querySelector('body');
 const uploadFileCancel = document.querySelector('#upload-cancel');
+const successUploadTemplate = document.querySelector('#success').content.querySelector('.success');
+const errorUploadTemplate = document.querySelector('#error').content.querySelector('.error');
+const submitButton = document.querySelector('.img-upload__submit');
 const hashTagsField = document.querySelector('.text__hashtags');
 const commentField = document.querySelector('.text__description');
 const photoEffectImage = document.querySelector('.img-upload__preview');
@@ -14,7 +18,6 @@ const scaleControlInput = document.querySelector('.scale__control--value');
 const intensitySliderElement = document.querySelector('.effect-level__slider');
 const sliderElementInputValue = document.querySelector('.effect-level__value');
 const radioButtonsFieldSet = document.querySelector('.img-upload__effects');
-const photoEffectNone = document.querySelector('#effect-none');
 const photoEffectChrome = document.querySelector('#effect-chrome');
 const photoEffectSepia = document.querySelector('#effect-sepia');
 const photoEffectMarvin = document.querySelector('#effect-marvin');
@@ -26,12 +29,12 @@ const MAX_RANGE = 3;
 const MIN_STEP = 0.1;
 const DECIMAL = 10;
 const PhotoFilter = {
-  NONE: 'none',
-  CHROME: 'grayscale',
-  SEPIA: 'sepia',
-  MARVIN: 'invert',
-  PHOBOS: 'blur',
-  HEAT: 'brightness',
+  NONE: {name: 'none', units: ''},
+  CHROME: {name: 'grayscale', units: ''},
+  SEPIA: {name: 'sepia', units: ''},
+  MARVIN: {name: 'invert', units: '%'},
+  PHOBOS: {name: 'blur', units: 'px'},
+  HEAT: {name: 'brightness', units: ''}
 };
 
 const createSlider = () => {
@@ -74,31 +77,31 @@ const removeSliderToInput = () => {
 
 const setChromeIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.CHROME}(${sliderElementInputValue.value})`;
+    photoEffectImage.style.filter = `${PhotoFilter.CHROME.name}(${sliderElementInputValue.value}${PhotoFilter.CHROME.units})`;
   });
 };
 
 const setSepiaIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.SEPIA}(${sliderElementInputValue.value})`;
+    photoEffectImage.style.filter = `${PhotoFilter.SEPIA.name}(${sliderElementInputValue.value}${PhotoFilter.SEPIA.units})`;
   });
 };
 
 const setMarvinIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.MARVIN}(${sliderElementInputValue.value}%)`;
+    photoEffectImage.style.filter = `${PhotoFilter.MARVIN.name}(${sliderElementInputValue.value}${PhotoFilter.MARVIN.units})`;
   });
 };
 
 const setPhobosIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.PHOBOS}(${sliderElementInputValue.value}px)`;
+    photoEffectImage.style.filter = `${PhotoFilter.PHOBOS.name}(${sliderElementInputValue.value}${PhotoFilter.PHOBOS.units})`;
   });
 };
 
 const setHeatIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.HEAT}(${sliderElementInputValue.value})`;
+    photoEffectImage.style.filter = `${PhotoFilter.HEAT.name}(${sliderElementInputValue.value}${PhotoFilter.HEAT.units})`;
   });
 };
 
@@ -109,7 +112,7 @@ const resetImageFilter = () => {
   intensitySliderElement.noUiSlider.off('update.filter');
 };
 
-const PhotoEffectChromeApply = () => {
+const photoEffectChromeApply = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -122,7 +125,7 @@ const PhotoEffectChromeApply = () => {
   setChromeIntensity();
 };
 
-const PhotoEffectSepiaApply = () => {
+const photoEffectSepiaApply = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -135,7 +138,7 @@ const PhotoEffectSepiaApply = () => {
   setSepiaIntensity();
 };
 
-const PhotoEffectMarvinApply = () => {
+const photoEffectMarvinApply = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -148,7 +151,7 @@ const PhotoEffectMarvinApply = () => {
   setMarvinIntensity();
 };
 
-const PhotoEffectPhobosApply = () => {
+const photoEffectPhobosApply = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -161,7 +164,7 @@ const PhotoEffectPhobosApply = () => {
   setPhobosIntensity();
 };
 
-const PhotoEffectHeatApply = () => {
+const photoEffectHeatApply = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 1,
@@ -176,24 +179,26 @@ const PhotoEffectHeatApply = () => {
 
 const onPhotoEffectClick = (evt) => {
   resetImageFilter();
-  if (evt.target.value === photoEffectNone.value) {
-    intensitySliderElement.style.display = 'none';
-    photoEffectImage.style.filter = '';
-  }
-  if (evt.target.value === photoEffectChrome.value) {
-    PhotoEffectChromeApply();
-  }
-  if (evt.target.value === photoEffectSepia.value) {
-    PhotoEffectSepiaApply();
-  }
-  if (evt.target.value === photoEffectMarvin.value) {
-    PhotoEffectMarvinApply();
-  }
-  if (evt.target.value === photoEffectPhobos.value) {
-    PhotoEffectPhobosApply();
-  }
-  if (evt.target.value === photoEffectHeat.value) {
-    PhotoEffectHeatApply();
+  switch (evt.target.value) {
+    case (photoEffectChrome.value):
+      photoEffectChromeApply();
+      break;
+    case (photoEffectSepia.value):
+      photoEffectSepiaApply();
+      break;
+    case (photoEffectMarvin.value):
+      photoEffectMarvinApply();
+      break;
+    case (photoEffectPhobos.value):
+      photoEffectPhobosApply();
+      break;
+    case (photoEffectHeat.value):
+      photoEffectHeatApply();
+      break;
+    default:
+      intensitySliderElement.style.display = 'none';
+      photoEffectImage.style.filter = '';
+      break;
   }
 };
 
@@ -201,6 +206,20 @@ const onModalEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeUploadFileModal();
+  }
+};
+
+const onSuccessEscKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeSuccessUploadModal();
+  }
+};
+
+const onErrorEscKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeErrorUploadModal();
   }
 };
 
@@ -265,6 +284,7 @@ function openUploadFileModal () {
   hashTagsField.addEventListener('blur', onModalHashtagFieldBlur);
   commentField.addEventListener('focus', onModalCommentsFieldFocus);
   commentField.addEventListener('blur', onModalCommentsFieldBlur);
+  checkUserForm();
 }
 
 function closeUploadFileModal () {
@@ -282,6 +302,62 @@ function closeUploadFileModal () {
   resetFormFields();
 }
 
+const showLoadingMessage = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Загружаем';
+};
+
+const closeLoadingMessage = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
+const onClickOutsideSuccessModal = (evt) => {
+  const currentElement = evt.target;
+  if (!currentElement.closest('.success__inner')) {
+    closeSuccessUploadModal();
+  }
+};
+
+function openSuccessUploadModal () {
+  closeUploadFileModal();
+  const successModal = successUploadTemplate.cloneNode(true);
+  const closeButton = successModal.querySelector('.success__button');
+  closeButton.addEventListener('click', closeSuccessUploadModal);
+  document.addEventListener('keydown', onSuccessEscKeydown);
+  document.addEventListener('click', onClickOutsideSuccessModal);
+  document.body.appendChild(successModal);
+}
+
+function closeSuccessUploadModal () {
+  document.removeEventListener('keydown', onSuccessEscKeydown);
+  document.removeEventListener('click', onClickOutsideSuccessModal);
+  document.body.lastChild.remove();
+}
+
+const onClickOutsideErrorModal = (evt) => {
+  const currentElement = evt.target;
+  if (!currentElement.closest('.error__inner')) {
+    closeErrorUploadModal();
+  }
+};
+
+function openErrorUploadModal () {
+  closeUploadFileModal();
+  const errorModal = errorUploadTemplate.cloneNode(true);
+  const closeButton = errorModal.querySelector('.error__button');
+  closeButton.addEventListener('click', closeErrorUploadModal);
+  document.addEventListener('keydown', onErrorEscKeydown);
+  document.addEventListener('click', onClickOutsideErrorModal);
+  document.body.appendChild(errorModal);
+}
+
+function closeErrorUploadModal () {
+  document.removeEventListener('keydown', onErrorEscKeydown);
+  document.removeEventListener('click', onClickOutsideErrorModal);
+  document.body.lastChild.remove();
+}
+
 uploadFile.addEventListener('change', () => {
   openUploadFileModal();
 });
@@ -290,3 +366,4 @@ uploadFileCancel.addEventListener('click', () => {
   closeUploadFileModal();
 });
 
+export {openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage};

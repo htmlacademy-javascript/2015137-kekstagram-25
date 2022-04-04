@@ -1,3 +1,9 @@
+import { uploadUserData } from './data-api.js';
+import { openErrorUploadModal } from './upload-modal.js';
+import { openSuccessUploadModal } from './upload-modal.js';
+import { showLoadingMessage } from './upload-modal.js';
+import { closeLoadingMessage } from './upload-modal.js';
+
 const uploadForm = document.querySelector('.img-upload__form');
 const HASHTAG_PATTERN = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
 const EMPTY_SPACES_PATTERN = /\s+/g;
@@ -41,7 +47,25 @@ pristine.addValidator(uploadForm.querySelector('.text__hashtags'),
   getHashtagsErrorMessage
 );
 
-uploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
+const checkUserForm = () => {
+  uploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      showLoadingMessage();
+      uploadUserData(
+        () => {
+          closeLoadingMessage();
+          openSuccessUploadModal();
+        },
+        () => {
+          closeLoadingMessage();
+          openErrorUploadModal();
+        },
+        new FormData(evt.target)
+      );
+    }
+  }, {once: true});
+};
+
+export {checkUserForm};
