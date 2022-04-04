@@ -50,7 +50,6 @@ pristine.addValidator(uploadForm.querySelector('.text__hashtags'),
 const checkUserForm = () => {
   uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-
     const isValid = pristine.validate();
     if (isValid) {
       showLoadingMessage();

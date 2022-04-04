@@ -182,28 +182,23 @@ const onPhotoEffectClick = (evt) => {
   switch (evt.target.value) {
     case (photoEffectChrome.value):
       photoEffectChromeApply();
-    break
-
+      break;
     case (photoEffectSepia.value):
       photoEffectSepiaApply();
-    break
-
+      break;
     case (photoEffectMarvin.value): 
       photoEffectMarvinApply();
-    break
-
+      break;
     case (photoEffectPhobos.value):
       photoEffectPhobosApply();
-    break
-
+      break;
     case (photoEffectHeat.value):
       photoEffectHeatApply();
-    break
-
+      break;
     default:
       intensitySliderElement.style.display = 'none';
       photoEffectImage.style.filter = '';
-    break
+      break;
   }
 };
 
@@ -328,17 +323,17 @@ function openSuccessUploadModal () {
   closeUploadFileModal();
   const successModal = successUploadTemplate.cloneNode(true);
   const closeButton = successModal.querySelector('.success__button');
-  closeButton.addEventListener('click', closeSuccessUploadModal)
+  closeButton.addEventListener('click', closeSuccessUploadModal);
   document.addEventListener('keydown', onSuccessEscKeydown);
   document.addEventListener('click', onClickOutsideSuccessModal);
   document.body.appendChild(successModal);
-};
+}
 
 function closeSuccessUploadModal () {
   document.removeEventListener('keydown', onSuccessEscKeydown);
   document.removeEventListener('click', onClickOutsideSuccessModal);
   document.body.lastChild.remove();
-};
+}
 
 const onClickOutsideErrorModal = (evt) => {
   const currentElement = evt.target;
@@ -351,17 +346,17 @@ function openErrorUploadModal () {
   closeUploadFileModal();
   const errorModal = errorUploadTemplate.cloneNode(true);
   const closeButton = errorModal.querySelector('.error__button');
-  closeButton.addEventListener('click', closeErrorUploadModal)
+  closeButton.addEventListener('click', closeErrorUploadModal);
   document.addEventListener('keydown', onErrorEscKeydown);
   document.addEventListener('click', onClickOutsideErrorModal);
   document.body.appendChild(errorModal);
-};
+}
 
 function closeErrorUploadModal () {
   document.removeEventListener('keydown', onErrorEscKeydown);
   document.removeEventListener('click', onClickOutsideErrorModal);
   document.body.lastChild.remove();
-};
+}
 
 uploadFile.addEventListener('change', () => {
   openUploadFileModal();

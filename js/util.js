@@ -27,7 +27,7 @@ const showLoadErrorMessage = (errorText) => {
   document.body.append(errorContainer);
   setTimeout(() => {
     errorContainer.remove();
-  }, ERROR_SHOW_TIME)
+  }, ERROR_SHOW_TIME);
 };
 
 checkStringLength('some', 10);
