@@ -1,6 +1,7 @@
 import { clearPhotoPosts } from './draw-photo.js';
 import { drawPhotoPosts } from './draw-photo.js';
 import { shuffleArrayElements } from './util.js';
+import { debounce } from './util.js';
 
 const filterElement = document.querySelector('.img-filters');
 const filterButtonRandom = document.querySelector('#filter-random');
@@ -25,21 +26,21 @@ const compareCommentsLength = (firstPost, secondPost) => {
 
 const showDefaultPhotoPosts = () => {
   addButtonFilterClass(filterButtonDefault);
-  drawPhotoPosts(defaultPostsData);
+  debounce(drawPhotoPosts(defaultPostsData));
 };
 
 const showMostDiscussedPhotoPosts = () => {
   addButtonFilterClass(filterButtonDiscussed);
   const mostDiscussedPostData = defaultPostsData.slice();
   mostDiscussedPostData.sort(compareCommentsLength);
-  drawPhotoPosts(mostDiscussedPostData);
+  debounce(drawPhotoPosts(mostDiscussedPostData));
 };
 
 const showRandomPhotoPosts = () => {
   addButtonFilterClass(filterButtonRandom);
   const randomPostData = defaultPostsData.slice();
   shuffleArrayElements(randomPostData);
-  drawPhotoPosts(randomPostData);
+  debounce(drawPhotoPosts(randomPostData));
 };
 
 const clearButtonFilterClass = () => {

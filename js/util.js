@@ -37,6 +37,14 @@ const shuffleArrayElements = (someArray) => {
   }
 };
 
+const debounce = (cb, timeoutDelay = 500) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => cb.apply(this, rest), timeoutDelay);
+  };
+};
+
 checkStringLength('some', 10);
 
-export {getRandomRoundNumber, getRandomArrayElement, isEscapeKey, showLoadErrorMessage, shuffleArrayElements};
+export {getRandomRoundNumber, getRandomArrayElement, isEscapeKey, showLoadErrorMessage, shuffleArrayElements, debounce};
