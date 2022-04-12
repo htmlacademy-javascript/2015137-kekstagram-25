@@ -30,6 +30,13 @@ const showLoadErrorMessage = (errorText) => {
   }, ERROR_SHOW_TIME);
 };
 
+const shuffleArrayElements = (someArray) => {
+  for (let i = 0; i < someArray.length - 1; i++) {
+    const j = getRandomRoundNumber(0, 1) * (i + 1);
+    [someArray[i], someArray[j]] = [someArray[j], someArray[i]];
+  }
+};
+
 checkStringLength('some', 10);
 
-export {getRandomRoundNumber, getRandomArrayElement, isEscapeKey, showLoadErrorMessage};
+export {getRandomRoundNumber, getRandomArrayElement, isEscapeKey, showLoadErrorMessage, shuffleArrayElements};

@@ -1,7 +1,9 @@
+import { getDefaultPhotoPostData } from './filter.js';
+
 const photoContainerElement = document.querySelector('.pictures');
 const photoPostTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-const createPhotoPosts = (photoCardsData) => {
+const drawPhotoPosts = (photoCardsData) => {
   const usersPhotoList = document.createDocumentFragment();
   photoCardsData.forEach((photoCard) => {
     const somePhoto = photoPostTemplate.cloneNode(true);
@@ -16,4 +18,13 @@ const createPhotoPosts = (photoCardsData) => {
   return photoContainerElement.append(usersPhotoList);
 };
 
-export {createPhotoPosts};
+const getPhotoPostsData = (recivedData) => {
+  getDefaultPhotoPostData(recivedData);
+  drawPhotoPosts(recivedData);
+};
+
+const clearPhotoPosts = () => {
+  photoContainerElement.querySelectorAll('.picture').forEach((photoPost) => photoPost.remove());
+};
+
+export {getPhotoPostsData, clearPhotoPosts, drawPhotoPosts};
