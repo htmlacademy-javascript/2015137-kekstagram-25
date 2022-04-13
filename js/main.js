@@ -7,7 +7,5 @@ import './filter.js';
 import { getUsersData } from './data-api.js';
 import { getPhotoPostsData } from './draw-photo.js';
 import { showLoadErrorMessage } from './util.js';
-import { showFilter } from './filter.js';
 
 getUsersData(getPhotoPostsData, showLoadErrorMessage);
-showFilter();

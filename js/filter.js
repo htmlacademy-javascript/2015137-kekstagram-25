@@ -77,6 +77,7 @@ const showFilter = () => {
 
 const getDefaultPhotoPostData = (someData) => {
   defaultPostsData = someData;
+  showFilter();
 };
 
-export {showFilter, getDefaultPhotoPostData};
+export {getDefaultPhotoPostData};
