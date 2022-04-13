@@ -1,4 +1,5 @@
 const ERROR_SHOW_TIME = 5000;
+
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const getRandomRoundNumber = (firstNumber, secondNumber) => {
@@ -30,6 +31,25 @@ const showLoadErrorMessage = (errorText) => {
   }, ERROR_SHOW_TIME);
 };
 
+const shuffleArrayElements = (someArray) => {
+  for (let i = 0; i < someArray.length - 1; i++) {
+    const j = getRandomRoundNumber(0, 1) * (i + 1);
+    [someArray[i], someArray[j]] = [someArray[j], someArray[i]];
+  }
+};
+
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    const delayedFunction = () => {
+      clearTimeout(timeoutId);
+      callback(...rest);
+    };
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(delayedFunction, timeoutDelay);
+  };
+};
+
 checkStringLength('some', 10);
 
-export {getRandomRoundNumber, getRandomArrayElement, isEscapeKey, showLoadErrorMessage};
+export {getRandomRoundNumber, getRandomArrayElement, isEscapeKey, showLoadErrorMessage, shuffleArrayElements, debounce};
