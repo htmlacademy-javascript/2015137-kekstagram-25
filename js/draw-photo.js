@@ -18,9 +18,9 @@ const drawPhotoPosts = (photoCardsData) => {
   return photoContainerElement.append(usersPhotoList);
 };
 
-const getPhotoPostsData = (recivedData) => {
-  getDefaultPhotoPostData(recivedData);
-  drawPhotoPosts(recivedData);
+const getPhotoPostsData = (receivedData) => {
+  getDefaultPhotoPostData(receivedData);
+  drawPhotoPosts(receivedData);
 };
 
 const clearPhotoPosts = () => {
