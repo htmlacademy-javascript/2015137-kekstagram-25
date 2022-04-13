@@ -1,4 +1,5 @@
 const ERROR_SHOW_TIME = 5000;
+
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const getRandomRoundNumber = (firstNumber, secondNumber) => {
@@ -37,11 +38,15 @@ const shuffleArrayElements = (someArray) => {
   }
 };
 
-const debounce = (cb, timeoutDelay = 500) => {
+const debounce = (callback, timeoutDelay) => {
   let timeoutId;
   return (...rest) => {
+    const delayedFunction = () => {
+      clearTimeout(timeoutId);
+      callback(...rest);
+    };
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => cb.apply(this, rest), timeoutDelay);
+    timeoutId = setTimeout(delayedFunction, timeoutDelay);
   };
 };
 
