@@ -9,6 +9,8 @@ const filterButtonDiscussed = document.querySelector('#filter-discussed');
 const filterButtonDefault = document.querySelector('#filter-default');
 
 const DRAW_PHOTO_DELAY = 500;
+const UNIC_POST_NUMBER = 10;
+const POST_NUMBER_TO_DELETE = 15;
 
 let defaultPostsData = [];
 
@@ -37,6 +39,7 @@ const showMostDiscussedPhotoPosts = () => {
 const showRandomPhotoPosts = () => {
   const randomPostData = defaultPostsData.slice();
   shuffleArrayElements(randomPostData);
+  randomPostData.splice(UNIC_POST_NUMBER, POST_NUMBER_TO_DELETE);
   clearPhotoPosts();
   drawPhotoPosts(randomPostData);
 };
