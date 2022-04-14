@@ -7,13 +7,10 @@ const filterElement = document.querySelector('.img-filters');
 const filterButtonRandom = document.querySelector('#filter-random');
 const filterButtonDiscussed = document.querySelector('#filter-discussed');
 const filterButtonDefault = document.querySelector('#filter-default');
+
 const DRAW_PHOTO_DELAY = 500;
 
 let defaultPostsData = [];
-
-const addButtonFilterClass = (someButton) => {
-  someButton.classList.add('img-filters__button--active');
-};
 
 const compareCommentsLength = (firstPost, secondPost) => {
   if (firstPost.comments.length < secondPost.comments.length) {
@@ -25,59 +22,63 @@ const compareCommentsLength = (firstPost, secondPost) => {
   return 0;
 };
 
-const showDefaultPhotoPosts = debounce (() => {
+const showDefaultPhotoPosts = () => {
   clearPhotoPosts();
   drawPhotoPosts(defaultPostsData);
-}, DRAW_PHOTO_DELAY);
+};
 
-const showMostDiscussedPhotoPosts = debounce (() => {
+const showMostDiscussedPhotoPosts = () => {
   const mostDiscussedPostData = defaultPostsData.slice();
   mostDiscussedPostData.sort(compareCommentsLength);
   clearPhotoPosts();
   drawPhotoPosts(mostDiscussedPostData);
-}, DRAW_PHOTO_DELAY);
+};
 
-const showRandomPhotoPosts = debounce (() => {
+const showRandomPhotoPosts = () => {
   const randomPostData = defaultPostsData.slice();
   shuffleArrayElements(randomPostData);
   clearPhotoPosts();
   drawPhotoPosts(randomPostData);
-}, DRAW_PHOTO_DELAY);
+};
 
 const clearButtonFilterClass = () => {
   filterElement.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
 };
 
-const filterSetup = (evt) => {
-  clearButtonFilterClass();
+const selectedFilterApply = (evt) => {
   switch (evt.target.id) {
     case (filterButtonRandom.id):
       showRandomPhotoPosts();
-      addButtonFilterClass(filterButtonRandom);
       break;
     case (filterButtonDiscussed.id):
       showMostDiscussedPhotoPosts();
-      addButtonFilterClass(filterButtonDiscussed);
       break;
     case (filterButtonDefault.id):
       showDefaultPhotoPosts();
-      addButtonFilterClass(filterButtonDefault);
       break;
     default:
       showDefaultPhotoPosts();
-      addButtonFilterClass(filterButtonDefault);
       break;
   }
 };
 
-const showFilter = () => {
+const debounceFilterClicks = debounce(selectedFilterApply, DRAW_PHOTO_DELAY);
+
+const onFilterButtonClick = () => {
   filterElement.classList.remove('img-filters--inactive');
-  filterElement.addEventListener('click', filterSetup);
+  filterElement.addEventListener('click', (evt) => {
+    const clickedElement = evt.target;
+    if (clickedElement.closest('.img-filters__button')) {
+      clearButtonFilterClass();
+      evt.target.classList.add('img-filters__button--active');
+      debounceFilterClicks(evt);
+    }
+  });
 };
 
 const getDefaultPhotoPostData = (someData) => {
   defaultPostsData = someData;
-  showFilter();
+  onFilterButtonClick();
 };
 
-export {getDefaultPhotoPostData};
+export {getDefaultPhotoPostData, onFilterButtonClick, selectedFilterApply};

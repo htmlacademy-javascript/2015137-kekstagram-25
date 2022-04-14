@@ -38,15 +38,11 @@ const shuffleArrayElements = (someArray) => {
   }
 };
 
-const debounce = (callback, timeoutDelay) => {
+const debounce = (cb, timeoutDelay) => {
   let timeoutId;
   return (...rest) => {
-    const delayedFunction = () => {
-      clearTimeout(timeoutId);
-      callback(...rest);
-    };
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(delayedFunction, timeoutDelay);
+    timeoutId = setTimeout(() => cb.apply(this, rest), timeoutDelay);
   };
 };
 

@@ -8,4 +8,8 @@ import { getUsersData } from './data-api.js';
 import { getPhotoPostsData } from './draw-photo.js';
 import { showLoadErrorMessage } from './util.js';
 
-getUsersData(getPhotoPostsData, showLoadErrorMessage);
+const initiateMainPage = () => {
+  getUsersData(getPhotoPostsData, showLoadErrorMessage);
+};
+
+initiateMainPage();
