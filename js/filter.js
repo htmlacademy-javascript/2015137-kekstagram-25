@@ -84,4 +84,4 @@ const getDefaultPhotoPostData = (someData) => {
   onFilterButtonClick();
 };
 
-export {getDefaultPhotoPostData, onFilterButtonClick, selectedFilterApply};
+export {getDefaultPhotoPostData, selectedFilterApply, defaultPostsData};

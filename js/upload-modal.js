@@ -274,6 +274,7 @@ const onModalCommentsFieldBlur = () => {
 function openUploadFileModal () {
   uploadFileOverlay.classList.remove('hidden');
   uploadFileModal.classList.add('modal-open');
+  uploadFileCancel.addEventListener('click', closeUploadFileModal);
   document.addEventListener('keydown', onModalEscKeydown);
   createSlider();
   attachSliderToInput();
@@ -290,6 +291,7 @@ function openUploadFileModal () {
 function closeUploadFileModal () {
   uploadFileOverlay.classList.add('hidden');
   uploadFileModal.classList.remove('modal-open');
+  uploadFileCancel.removeEventListener('click', closeUploadFileModal);
   document.removeEventListener('keydown', onModalEscKeydown);
   hashTagsField.removeEventListener('focus', onModalHashtagFieldFocus);
   hashTagsField.removeEventListener('blur', onModalHashtagFieldBlur);
@@ -357,13 +359,10 @@ function closeErrorUploadModal () {
   document.removeEventListener('click', onClickOutsideErrorModal);
   document.body.lastChild.remove();
 }
+const setUploadForm = () => {
+  uploadFile.addEventListener('change', () => {
+    openUploadFileModal();
+  });
+};
 
-uploadFile.addEventListener('change', () => {
-  openUploadFileModal();
-});
-
-uploadFileCancel.addEventListener('click', () => {
-  closeUploadFileModal();
-});
-
-export {openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage};
+export {openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage, setUploadForm, uploadFileModal};

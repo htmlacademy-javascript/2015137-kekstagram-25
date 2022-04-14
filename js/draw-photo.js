@@ -27,4 +27,4 @@ const clearPhotoPosts = () => {
   photoContainerElement.querySelectorAll('.picture').forEach((photoPost) => photoPost.remove());
 };
 
-export {getPhotoPostsData, clearPhotoPosts, drawPhotoPosts};
+export {getPhotoPostsData, clearPhotoPosts, drawPhotoPosts, photoContainerElement};
