@@ -7,12 +7,15 @@ const fullSizeContainer = document.querySelector('.big-picture');
 const bigPhotoElement = fullSizeContainer.querySelector('div.big-picture__img img');
 const authorCommentElement = fullSizeContainer.querySelector('div.big-picture__social p.social__caption');
 const likesElement = fullSizeContainer.querySelector('span.likes-count');
-const commentsCountElement = fullSizeContainer.querySelector('.comments-count');
-const allCommentsElement = fullSizeContainer.querySelector('.social__comment-count');
+const allCommentsElement = fullSizeContainer.querySelector('.comments-count');
+const shownCommentsElement = fullSizeContainer.querySelector('.social__comment-count').childNodes[0];
 const loadMoreCommentsElement = fullSizeContainer.querySelector('.comments-loader');
 const closeFullPictureButton = fullSizeContainer.querySelector('.big-picture__cancel');
 const socialCommentContainer = fullSizeContainer.querySelector('.social__comments');
+const COMMENTS_PORTION = 5;
+const COMMENT_COUNT_PATTERN = /^[0-9]{1,9}/;
 const URL_PATTERN = /photos\/+[0-9]{1,9}.jpg/g;
+let currentPhotoPostComments = [];
 
 const getPhotoUrl = (someUrl) => someUrl.match(URL_PATTERN).join();
 
@@ -36,22 +39,43 @@ const createNewComment = (commentData) => {
   return newLiElement;
 };
 
-const createPhotoComments = (commentsData) => {
+const increaseCommentsCount = (commentsAmount) => {
+  shownCommentsElement.textContent = shownCommentsElement.textContent.replace(COMMENT_COUNT_PATTERN,
+    (commentCount) => (+commentCount + commentsAmount));
+};
+
+const createPhotoComments = () => {
   const newCommentsContainer = document.createDocumentFragment();
-  commentsData.forEach((comment) => {
+  const photoPhostCommentsPart = currentPhotoPostComments.splice(0, COMMENTS_PORTION);
+  let createdCommentsCount = 0;
+  photoPhostCommentsPart.forEach((comment) => {
     newCommentsContainer.append(createNewComment(comment));
+    createdCommentsCount++;
   });
-  return newCommentsContainer;
+  if (currentPhotoPostComments.length === 0) {
+    loadMoreCommentsElement.classList.add('hidden');
+  }
+  increaseCommentsCount(createdCommentsCount);
+  return socialCommentContainer.append(newCommentsContainer);
+};
+
+const resetCommentCount = () => {
+  shownCommentsElement.textContent = shownCommentsElement.textContent.replace(COMMENT_COUNT_PATTERN, 0);
+};
+
+const onMoreCommentsButtonClickListener = () => {
+  loadMoreCommentsElement.addEventListener('click', createPhotoComments);
 };
 
 const showFullPicture = (evt) => {
   const clickedPost = getPhotoUrl(evt.target.src);
   bigPhotoElement.src = defaultPostsData.find((post) => post.url === clickedPost).url;
   likesElement.textContent = defaultPostsData.find((post) => post.url === clickedPost).likes;
-  commentsCountElement.textContent = defaultPostsData.find((post) => post.url === clickedPost).comments.length;
+  allCommentsElement.textContent = defaultPostsData.find((post) => post.url === clickedPost).comments.length;
   authorCommentElement.textContent = defaultPostsData.find((post) => post.url === clickedPost).description;
-  const clickedPostComments = defaultPostsData.find((post) => post.url === clickedPost).comments;
-  socialCommentContainer.append(createPhotoComments(clickedPostComments));
+  currentPhotoPostComments = defaultPostsData.find((post) => post.url === clickedPost).comments.slice();
+  createPhotoComments(currentPhotoPostComments);
+  onMoreCommentsButtonClickListener();
   uploadFileModal.classList.add('modal-open');
 };
 
@@ -75,9 +99,9 @@ function openFullPicture (evt) {
   if (clickedElement.closest('img')) {
     closeFullPictureButton.addEventListener('click', closeFullPicture);
     document.addEventListener('keydown', onFullPictureEscKeydown);
-    allCommentsElement.classList.add('hidden');
-    loadMoreCommentsElement.classList.add('hidden');
     fullSizeContainer.classList.remove('hidden');
+    loadMoreCommentsElement.classList.remove('hidden');
+    resetCommentCount();
     removePhotoComments();
     disablePreviewPhotoClick();
     showFullPicture(evt);
@@ -87,8 +111,10 @@ function openFullPicture (evt) {
 function closeFullPicture () {
   closeFullPictureButton.removeEventListener('click', closeFullPicture);
   document.removeEventListener('keydown', onFullPictureEscKeydown);
+  loadMoreCommentsElement.removeEventListener('click', createPhotoComments);
   uploadFileModal.classList.remove('modal-open');
   fullSizeContainer.classList.add('hidden');
+  resetCommentCount();
   onPreviewPhotoClick();
 }
 
