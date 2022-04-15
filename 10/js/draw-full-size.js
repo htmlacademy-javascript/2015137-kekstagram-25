@@ -12,9 +12,9 @@ const allCommentsElement = fullSizeContainer.querySelector('.social__comment-cou
 const loadMoreCommentsElement = fullSizeContainer.querySelector('.comments-loader');
 const closeFullPictureButton = fullSizeContainer.querySelector('.big-picture__cancel');
 const socialCommentContainer = fullSizeContainer.querySelector('.social__comments');
+const URL_PATTERN = /photos\/+[0-9]{1,9}.jpg/g;
 
-
-const getPhotoUrl = (someUrl) => someUrl.split('/').slice(3).join('/');
+const getPhotoUrl = (someUrl) => someUrl.match(URL_PATTERN).join();
 
 const removePhotoComments = () => {
   while(socialCommentContainer.firstChild) {

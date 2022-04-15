@@ -65,12 +65,11 @@ const selectedFilterApply = (evt) => {
   }
 };
 
-const debounceFilterClicks = debounce(selectedFilterApply, DRAW_PHOTO_DELAY);
-
-const onFilterButtonClick = () => {
+const setFilterButtonClickListener = () => {
   filterElement.classList.remove('img-filters--inactive');
   filterElement.addEventListener('click', (evt) => {
     const clickedElement = evt.target;
+    const debounceFilterClicks = debounce(selectedFilterApply, DRAW_PHOTO_DELAY);
     if (clickedElement.closest('.img-filters__button')) {
       clearButtonFilterClass();
       evt.target.classList.add('img-filters__button--active');
@@ -81,7 +80,7 @@ const onFilterButtonClick = () => {
 
 const getDefaultPhotoPostData = (someData) => {
   defaultPostsData = someData;
-  onFilterButtonClick();
+  setFilterButtonClickListener();
 };
 
 export {getDefaultPhotoPostData, selectedFilterApply, defaultPostsData};
