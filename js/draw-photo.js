@@ -18,13 +18,13 @@ const drawPhotoPosts = (photoCardsData) => {
   return photoContainerElement.append(usersPhotoList);
 };
 
-const getPhotoPostsData = (recivedData) => {
-  getDefaultPhotoPostData(recivedData);
-  drawPhotoPosts(recivedData);
+const getPhotoPostsData = (receivedData) => {
+  getDefaultPhotoPostData(receivedData);
+  drawPhotoPosts(receivedData);
 };
 
 const clearPhotoPosts = () => {
   photoContainerElement.querySelectorAll('.picture').forEach((photoPost) => photoPost.remove());
 };
 
-export {getPhotoPostsData, clearPhotoPosts, drawPhotoPosts};
+export {getPhotoPostsData, clearPhotoPosts, drawPhotoPosts, photoContainerElement};
