@@ -56,7 +56,7 @@ const createPhotoComments = () => {
     loadMoreCommentsElement.classList.add('hidden');
   }
   increaseCommentsCount(createdCommentsCount);
-  return socialCommentContainer.append(newCommentsContainer);
+  socialCommentContainer.append(newCommentsContainer);
 };
 
 const resetCommentCount = () => {
