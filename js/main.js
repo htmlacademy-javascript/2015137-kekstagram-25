@@ -5,6 +5,7 @@ import './draw-photo.js';
 import './upload-form.js';
 import './filter.js';
 import './draw-full-size.js';
+import './upload-file.js';
 import { getUsersData } from './data-api.js';
 import { getPhotoPostsData } from './draw-photo.js';
 import { showLoadErrorMessage } from './util.js';
