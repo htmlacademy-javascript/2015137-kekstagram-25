@@ -47,25 +47,31 @@ pristine.addValidator(uploadForm.querySelector('.text__hashtags'),
   getHashtagsErrorMessage
 );
 
-const checkUserForm = () => {
-  uploadForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    const isValid = pristine.validate();
-    if (isValid) {
-      showLoadingMessage();
-      uploadUserData(
-        () => {
-          closeLoadingMessage();
-          openSuccessUploadModal();
-        },
-        () => {
-          closeLoadingMessage();
-          openErrorUploadModal();
-        },
-        new FormData(evt.target)
-      );
-    }
-  }, {once: true});
+const onSubmitButtonClick = (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid) {
+    showLoadingMessage();
+    uploadUserData(
+      () => {
+        closeLoadingMessage();
+        openSuccessUploadModal();
+      },
+      () => {
+        closeLoadingMessage();
+        openErrorUploadModal();
+      },
+      new FormData(evt.target)
+    );
+  }
 };
 
-export {checkUserForm};
+const removeListenerFromSubmit = () => {
+  uploadForm.removeEventListener('submit', onSubmitButtonClick, {once: true});
+};
+
+const setListenerOnSubmit = () => {
+  uploadForm.addEventListener('submit', onSubmitButtonClick, {once: true});
+};
+
+export {setListenerOnSubmit, removeListenerFromSubmit};
