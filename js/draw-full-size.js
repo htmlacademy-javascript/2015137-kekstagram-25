@@ -3,6 +3,10 @@ import { defaultPostsData } from './filter.js';
 import { uploadFileModal } from './upload-modal.js';
 import { isEscapeKey } from './util.js';
 
+const COMMENTS_PORTION = 5;
+const COMMENT_COUNT_PATTERN = /^[0-9]{1,9}/;
+const URL_PATTERN = /photos\/+[0-9]{1,9}.jpg/g;
+
 const fullSizeContainer = document.querySelector('.big-picture');
 const bigPhotoElement = fullSizeContainer.querySelector('div.big-picture__img img');
 const authorCommentElement = fullSizeContainer.querySelector('div.big-picture__social p.social__caption');
@@ -12,9 +16,7 @@ const shownCommentsElement = fullSizeContainer.querySelector('.social__comment-c
 const loadMoreCommentsElement = fullSizeContainer.querySelector('.comments-loader');
 const closeFullPictureButton = fullSizeContainer.querySelector('.big-picture__cancel');
 const socialCommentContainer = fullSizeContainer.querySelector('.social__comments');
-const COMMENTS_PORTION = 5;
-const COMMENT_COUNT_PATTERN = /^[0-9]{1,9}/;
-const URL_PATTERN = /photos\/+[0-9]{1,9}.jpg/g;
+
 let currentPhotoPostComments = [];
 
 const getPhotoUrl = (someUrl) => someUrl.match(URL_PATTERN).join();
@@ -56,7 +58,7 @@ const createPhotoComments = () => {
     loadMoreCommentsElement.classList.add('hidden');
   }
   increaseCommentsCount(createdCommentsCount);
-  return socialCommentContainer.append(newCommentsContainer);
+  socialCommentContainer.append(newCommentsContainer);
 };
 
 const resetCommentCount = () => {

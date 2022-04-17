@@ -3,14 +3,14 @@ import { drawPhotoPosts } from './draw-photo.js';
 import { shuffleArrayElements } from './util.js';
 import { debounce } from './util.js';
 
+const DRAW_PHOTO_DELAY = 500;
+const UNIC_POST_NUMBER = 10;
+const POST_NUMBER_TO_DELETE = 15;
+
 const filterElement = document.querySelector('.img-filters');
 const filterButtonRandom = document.querySelector('#filter-random');
 const filterButtonDiscussed = document.querySelector('#filter-discussed');
 const filterButtonDefault = document.querySelector('#filter-default');
-
-const DRAW_PHOTO_DELAY = 500;
-const UNIC_POST_NUMBER = 10;
-const POST_NUMBER_TO_DELETE = 15;
 
 let defaultPostsData = [];
 
@@ -49,33 +49,31 @@ const clearButtonFilterClass = () => {
 };
 
 const selectedFilterApply = (evt) => {
-  switch (evt.target.id) {
-    case (filterButtonRandom.id):
-      showRandomPhotoPosts();
-      break;
-    case (filterButtonDiscussed.id):
-      showMostDiscussedPhotoPosts();
-      break;
-    case (filterButtonDefault.id):
-      showDefaultPhotoPosts();
-      break;
-    default:
-      showDefaultPhotoPosts();
-      break;
+  const clickedElement = evt.target;
+  if (clickedElement.closest('.img-filters__button')) {
+    clearButtonFilterClass();
+    evt.target.classList.add('img-filters__button--active');
+
+    switch (evt.target.id) {
+      case (filterButtonRandom.id):
+        showRandomPhotoPosts();
+        break;
+      case (filterButtonDiscussed.id):
+        showMostDiscussedPhotoPosts();
+        break;
+      case (filterButtonDefault.id):
+        showDefaultPhotoPosts();
+        break;
+      default:
+        showDefaultPhotoPosts();
+        break;
+    }
   }
 };
 
 const setFilterButtonClickListener = () => {
   filterElement.classList.remove('img-filters--inactive');
-  filterElement.addEventListener('click', (evt) => {
-    const clickedElement = evt.target;
-    const debounceFilterClicks = debounce(selectedFilterApply, DRAW_PHOTO_DELAY);
-    if (clickedElement.closest('.img-filters__button')) {
-      clearButtonFilterClass();
-      evt.target.classList.add('img-filters__button--active');
-      debounceFilterClicks(evt);
-    }
-  });
+  filterElement.addEventListener('click', debounce(selectedFilterApply, DRAW_PHOTO_DELAY));
 };
 
 const getDefaultPhotoPostData = (someData) => {

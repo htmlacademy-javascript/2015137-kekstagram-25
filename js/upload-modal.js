@@ -1,5 +1,21 @@
 import { isEscapeKey } from './util.js';
-import { checkUserForm } from './upload-form.js';
+import { setListenerOnSubmit, removeListenerFromSubmit } from './upload-form.js';
+import { onPreviewPhotoClick, disablePreviewPhotoClick } from './draw-full-size.js';
+
+const MAX_SCALE_VALUE = 100;
+const MIN_SCALE_VALUE = 25;
+const MAX_RANGE = 3;
+const MIN_STEP = 0.1;
+const DECIMAL = 10;
+
+const PhotoFilter = {
+  NONE: {name: 'none', units: ''},
+  CHROME: {name: 'grayscale', units: ''},
+  SEPIA: {name: 'sepia', units: ''},
+  MARVIN: {name: 'invert', units: '%'},
+  PHOBOS: {name: 'blur', units: 'px'},
+  HEAT: {name: 'brightness', units: ''}
+};
 
 const uploadFile = document.querySelector('#upload-file');
 const uploadFileOverlay = document.querySelector('.img-upload__overlay');
@@ -23,19 +39,6 @@ const photoEffectSepia = document.querySelector('#effect-sepia');
 const photoEffectMarvin = document.querySelector('#effect-marvin');
 const photoEffectPhobos = document.querySelector('#effect-phobos');
 const photoEffectHeat = document.querySelector('#effect-heat');
-const MAX_SCALE_VALUE = 100;
-const MIN_SCALE_VALUE = 25;
-const MAX_RANGE = 3;
-const MIN_STEP = 0.1;
-const DECIMAL = 10;
-const PhotoFilter = {
-  NONE: {name: 'none', units: ''},
-  CHROME: {name: 'grayscale', units: ''},
-  SEPIA: {name: 'sepia', units: ''},
-  MARVIN: {name: 'invert', units: '%'},
-  PHOBOS: {name: 'blur', units: 'px'},
-  HEAT: {name: 'brightness', units: ''}
-};
 
 const createSlider = () => {
   intensitySliderElement.style.display = 'none';
@@ -62,17 +65,15 @@ const createSlider = () => {
 };
 
 const removeSlider = () => {
-  intensitySliderElement.noUiSlider.destroy();
+  if (intensitySliderElement.noUiSlider) {
+    intensitySliderElement.noUiSlider.destroy();
+  }
 };
 
 const attachSliderToInput = () => {
   intensitySliderElement.noUiSlider.on('update', () => {
     sliderElementInputValue.value = intensitySliderElement.noUiSlider.get();
   });
-};
-
-const removeSliderToInput = () => {
-  intensitySliderElement.noUiSlider.off('update');
 };
 
 const setChromeIntensity = () => {
@@ -106,10 +107,11 @@ const setHeatIntensity = () => {
 };
 
 const resetImageFilter = () => {
+  effectNoneCheckbox.setAttribute('checked', 'true');
+  effectNoneCheckbox.checked = true;
   photoEffectImage.className = 'img-upload__preview';
   photoEffectImage.style.filter = '';
   intensitySliderElement.style.display = 'block';
-  intensitySliderElement.noUiSlider.off('update.filter');
 };
 
 const photoEffectChromeApply = () => {
@@ -178,27 +180,31 @@ const photoEffectHeatApply = () => {
 };
 
 const onPhotoEffectClick = (evt) => {
-  resetImageFilter();
-  switch (evt.target.value) {
-    case (photoEffectChrome.value):
-      photoEffectChromeApply();
-      break;
-    case (photoEffectSepia.value):
-      photoEffectSepiaApply();
-      break;
-    case (photoEffectMarvin.value):
-      photoEffectMarvinApply();
-      break;
-    case (photoEffectPhobos.value):
-      photoEffectPhobosApply();
-      break;
-    case (photoEffectHeat.value):
-      photoEffectHeatApply();
-      break;
-    default:
-      intensitySliderElement.style.display = 'none';
-      photoEffectImage.style.filter = '';
-      break;
+  const clickedElement = evt.target;
+  if (clickedElement.closest('.effects__radio')) {
+    resetImageFilter();
+    evt.target.checked = true;
+    switch (evt.target.value) {
+      case (photoEffectChrome.value):
+        photoEffectChromeApply();
+        break;
+      case (photoEffectSepia.value):
+        photoEffectSepiaApply();
+        break;
+      case (photoEffectMarvin.value):
+        photoEffectMarvinApply();
+        break;
+      case (photoEffectPhobos.value):
+        photoEffectPhobosApply();
+        break;
+      case (photoEffectHeat.value):
+        photoEffectHeatApply();
+        break;
+      default:
+        intensitySliderElement.style.display = 'none';
+        photoEffectImage.style.filter = '';
+        break;
+    }
   }
 };
 
@@ -226,7 +232,6 @@ const onErrorEscKeydown = (evt) => {
 const resetFormFields = () => {
   hashTagsField.value = '';
   commentField.value = '';
-  effectNoneCheckbox.setAttribute('checked', 'checked');
   uploadFile.value = '';
 };
 
@@ -272,6 +277,7 @@ const onModalCommentsFieldBlur = () => {
 };
 
 function openUploadFileModal () {
+  disablePreviewPhotoClick();
   uploadFileOverlay.classList.remove('hidden');
   uploadFileModal.classList.add('modal-open');
   uploadFileCancel.addEventListener('click', closeUploadFileModal);
@@ -285,7 +291,7 @@ function openUploadFileModal () {
   hashTagsField.addEventListener('blur', onModalHashtagFieldBlur);
   commentField.addEventListener('focus', onModalCommentsFieldFocus);
   commentField.addEventListener('blur', onModalCommentsFieldBlur);
-  checkUserForm();
+  setListenerOnSubmit();
 }
 
 function closeUploadFileModal () {
@@ -297,11 +303,12 @@ function closeUploadFileModal () {
   hashTagsField.removeEventListener('blur', onModalHashtagFieldBlur);
   commentField.removeEventListener('focus', onModalCommentsFieldFocus);
   commentField.removeEventListener('blur', onModalCommentsFieldBlur);
-  resetPreviewImageScale();
+  removeListenerFromSubmit();
   resetImageFilter();
-  removeSliderToInput();
+  resetPreviewImageScale();
   removeSlider();
   resetFormFields();
+  onPreviewPhotoClick();
 }
 
 const showLoadingMessage = () => {
@@ -322,13 +329,13 @@ const onClickOutsideSuccessModal = (evt) => {
 };
 
 function openSuccessUploadModal () {
-  closeUploadFileModal();
   const successModal = successUploadTemplate.cloneNode(true);
   const closeButton = successModal.querySelector('.success__button');
   closeButton.addEventListener('click', closeSuccessUploadModal);
   document.addEventListener('keydown', onSuccessEscKeydown);
   document.addEventListener('click', onClickOutsideSuccessModal);
   document.body.appendChild(successModal);
+  closeUploadFileModal();
 }
 
 function closeSuccessUploadModal () {
@@ -345,13 +352,13 @@ const onClickOutsideErrorModal = (evt) => {
 };
 
 function openErrorUploadModal () {
-  closeUploadFileModal();
   const errorModal = errorUploadTemplate.cloneNode(true);
   const closeButton = errorModal.querySelector('.error__button');
   closeButton.addEventListener('click', closeErrorUploadModal);
   document.addEventListener('keydown', onErrorEscKeydown);
   document.addEventListener('click', onClickOutsideErrorModal);
   document.body.appendChild(errorModal);
+  closeUploadFileModal();
 }
 
 function closeErrorUploadModal () {
@@ -360,9 +367,7 @@ function closeErrorUploadModal () {
   document.body.lastChild.remove();
 }
 const setUploadForm = () => {
-  uploadFile.addEventListener('change', () => {
-    openUploadFileModal();
-  });
+  uploadFile.addEventListener('change', openUploadFileModal);
 };
 
-export {openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage, setUploadForm, uploadFileModal};
+export {openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage, setUploadForm, uploadFileModal, closeUploadFileModal};

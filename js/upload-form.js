@@ -1,13 +1,11 @@
 import { uploadUserData } from './data-api.js';
-import { openErrorUploadModal } from './upload-modal.js';
-import { openSuccessUploadModal } from './upload-modal.js';
-import { showLoadingMessage } from './upload-modal.js';
-import { closeLoadingMessage } from './upload-modal.js';
+import { openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage } from './upload-modal.js';
 
-const uploadForm = document.querySelector('.img-upload__form');
 const HASHTAG_PATTERN = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
 const EMPTY_SPACES_PATTERN = /\s+/g;
 const MAX_HASHTAGS = 5;
+
+const uploadForm = document.querySelector('.img-upload__form');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__text',
@@ -47,25 +45,31 @@ pristine.addValidator(uploadForm.querySelector('.text__hashtags'),
   getHashtagsErrorMessage
 );
 
-const checkUserForm = () => {
-  uploadForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    const isValid = pristine.validate();
-    if (isValid) {
-      showLoadingMessage();
-      uploadUserData(
-        () => {
-          closeLoadingMessage();
-          openSuccessUploadModal();
-        },
-        () => {
-          closeLoadingMessage();
-          openErrorUploadModal();
-        },
-        new FormData(evt.target)
-      );
-    }
-  }, {once: true});
+const onSubmitButtonClick = (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid) {
+    showLoadingMessage();
+    uploadUserData(
+      () => {
+        closeLoadingMessage();
+        openSuccessUploadModal();
+      },
+      () => {
+        closeLoadingMessage();
+        openErrorUploadModal();
+      },
+      new FormData(evt.target)
+    );
+  }
 };
 
-export {checkUserForm};
+const removeListenerFromSubmit = () => {
+  uploadForm.removeEventListener('submit', onSubmitButtonClick, {once: true});
+};
+
+const setListenerOnSubmit = () => {
+  uploadForm.addEventListener('submit', onSubmitButtonClick, {once: true});
+};
+
+export {setListenerOnSubmit, removeListenerFromSubmit};
