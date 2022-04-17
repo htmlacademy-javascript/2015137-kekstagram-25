@@ -24,11 +24,13 @@ const photoEffectSepia = document.querySelector('#effect-sepia');
 const photoEffectMarvin = document.querySelector('#effect-marvin');
 const photoEffectPhobos = document.querySelector('#effect-phobos');
 const photoEffectHeat = document.querySelector('#effect-heat');
+
 const MAX_SCALE_VALUE = 100;
 const MIN_SCALE_VALUE = 25;
 const MAX_RANGE = 3;
 const MIN_STEP = 0.1;
 const DECIMAL = 10;
+
 const PhotoFilter = {
   NONE: {name: 'none', units: ''},
   CHROME: {name: 'grayscale', units: ''},
@@ -63,17 +65,15 @@ const createSlider = () => {
 };
 
 const removeSlider = () => {
-  intensitySliderElement.noUiSlider.destroy();
+  if (intensitySliderElement.noUiSlider) {
+    intensitySliderElement.noUiSlider.destroy();
+  }
 };
 
 const attachSliderToInput = () => {
   intensitySliderElement.noUiSlider.on('update', () => {
     sliderElementInputValue.value = intensitySliderElement.noUiSlider.get();
   });
-};
-
-const removeSliderToInput = () => {
-  intensitySliderElement.noUiSlider.off('update');
 };
 
 const setChromeIntensity = () => {
@@ -108,10 +108,10 @@ const setHeatIntensity = () => {
 
 const resetImageFilter = () => {
   effectNoneCheckbox.setAttribute('checked', 'true');
+  effectNoneCheckbox.checked = true;
   photoEffectImage.className = 'img-upload__preview';
   photoEffectImage.style.filter = '';
   intensitySliderElement.style.display = 'block';
-  intensitySliderElement.noUiSlider.off('update.filter');
 };
 
 const photoEffectChromeApply = () => {
@@ -305,7 +305,6 @@ function closeUploadFileModal () {
   commentField.removeEventListener('blur', onModalCommentsFieldBlur);
   resetImageFilter();
   resetPreviewImageScale();
-  removeSliderToInput();
   removeSlider();
   resetFormFields();
   onPreviewPhotoClick();
@@ -329,13 +328,13 @@ const onClickOutsideSuccessModal = (evt) => {
 };
 
 function openSuccessUploadModal () {
-  closeUploadFileModal();
   const successModal = successUploadTemplate.cloneNode(true);
   const closeButton = successModal.querySelector('.success__button');
   closeButton.addEventListener('click', closeSuccessUploadModal);
   document.addEventListener('keydown', onSuccessEscKeydown);
   document.addEventListener('click', onClickOutsideSuccessModal);
   document.body.appendChild(successModal);
+  closeUploadFileModal();
 }
 
 function closeSuccessUploadModal () {
@@ -352,13 +351,13 @@ const onClickOutsideErrorModal = (evt) => {
 };
 
 function openErrorUploadModal () {
-  closeUploadFileModal();
   const errorModal = errorUploadTemplate.cloneNode(true);
   const closeButton = errorModal.querySelector('.error__button');
   closeButton.addEventListener('click', closeErrorUploadModal);
   document.addEventListener('keydown', onErrorEscKeydown);
   document.addEventListener('click', onClickOutsideErrorModal);
   document.body.appendChild(errorModal);
+  closeUploadFileModal();
 }
 
 function closeErrorUploadModal () {
@@ -367,9 +366,7 @@ function closeErrorUploadModal () {
   document.body.lastChild.remove();
 }
 const setUploadForm = () => {
-  uploadFile.addEventListener('change', () => {
-    openUploadFileModal();
-  });
+  uploadFile.addEventListener('change', openUploadFileModal);
 };
 
-export {openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage, setUploadForm, uploadFileModal};
+export {openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage, setUploadForm, uploadFileModal, closeUploadFileModal};
