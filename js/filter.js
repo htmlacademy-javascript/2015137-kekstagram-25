@@ -49,33 +49,31 @@ const clearButtonFilterClass = () => {
 };
 
 const selectedFilterApply = (evt) => {
-  switch (evt.target.id) {
-    case (filterButtonRandom.id):
-      showRandomPhotoPosts();
-      break;
-    case (filterButtonDiscussed.id):
-      showMostDiscussedPhotoPosts();
-      break;
-    case (filterButtonDefault.id):
-      showDefaultPhotoPosts();
-      break;
-    default:
-      showDefaultPhotoPosts();
-      break;
+  const clickedElement = evt.target;
+  if (clickedElement.closest('.img-filters__button')) {
+    clearButtonFilterClass();
+    evt.target.classList.add('img-filters__button--active');
+
+    switch (evt.target.id) {
+      case (filterButtonRandom.id):
+        showRandomPhotoPosts();
+        break;
+      case (filterButtonDiscussed.id):
+        showMostDiscussedPhotoPosts();
+        break;
+      case (filterButtonDefault.id):
+        showDefaultPhotoPosts();
+        break;
+      default:
+        showDefaultPhotoPosts();
+        break;
+    }
   }
 };
 
 const setFilterButtonClickListener = () => {
   filterElement.classList.remove('img-filters--inactive');
-  filterElement.addEventListener('click', (evt) => {
-    const clickedElement = evt.target;
-    const debounceFilterClicks = debounce(selectedFilterApply, DRAW_PHOTO_DELAY);
-    if (clickedElement.closest('.img-filters__button')) {
-      clearButtonFilterClass();
-      evt.target.classList.add('img-filters__button--active');
-      debounceFilterClicks(evt);
-    }
-  });
+  filterElement.addEventListener('click', debounce(selectedFilterApply, DRAW_PHOTO_DELAY));
 };
 
 const getDefaultPhotoPostData = (someData) => {

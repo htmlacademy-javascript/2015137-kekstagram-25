@@ -1,5 +1,6 @@
 import { isEscapeKey } from './util.js';
 import { checkUserForm } from './upload-form.js';
+import { onPreviewPhotoClick, disablePreviewPhotoClick } from './draw-full-size.js';
 
 const uploadFile = document.querySelector('#upload-file');
 const uploadFileOverlay = document.querySelector('.img-upload__overlay');
@@ -106,6 +107,7 @@ const setHeatIntensity = () => {
 };
 
 const resetImageFilter = () => {
+  effectNoneCheckbox.setAttribute('checked', 'true');
   photoEffectImage.className = 'img-upload__preview';
   photoEffectImage.style.filter = '';
   intensitySliderElement.style.display = 'block';
@@ -178,27 +180,31 @@ const photoEffectHeatApply = () => {
 };
 
 const onPhotoEffectClick = (evt) => {
-  resetImageFilter();
-  switch (evt.target.value) {
-    case (photoEffectChrome.value):
-      photoEffectChromeApply();
-      break;
-    case (photoEffectSepia.value):
-      photoEffectSepiaApply();
-      break;
-    case (photoEffectMarvin.value):
-      photoEffectMarvinApply();
-      break;
-    case (photoEffectPhobos.value):
-      photoEffectPhobosApply();
-      break;
-    case (photoEffectHeat.value):
-      photoEffectHeatApply();
-      break;
-    default:
-      intensitySliderElement.style.display = 'none';
-      photoEffectImage.style.filter = '';
-      break;
+  const clickedElement = evt.target;
+  if (clickedElement.closest('.effects__radio')) {
+    resetImageFilter();
+    evt.target.checked = true;
+    switch (evt.target.value) {
+      case (photoEffectChrome.value):
+        photoEffectChromeApply();
+        break;
+      case (photoEffectSepia.value):
+        photoEffectSepiaApply();
+        break;
+      case (photoEffectMarvin.value):
+        photoEffectMarvinApply();
+        break;
+      case (photoEffectPhobos.value):
+        photoEffectPhobosApply();
+        break;
+      case (photoEffectHeat.value):
+        photoEffectHeatApply();
+        break;
+      default:
+        intensitySliderElement.style.display = 'none';
+        photoEffectImage.style.filter = '';
+        break;
+    }
   }
 };
 
@@ -226,7 +232,6 @@ const onErrorEscKeydown = (evt) => {
 const resetFormFields = () => {
   hashTagsField.value = '';
   commentField.value = '';
-  effectNoneCheckbox.setAttribute('checked', 'checked');
   uploadFile.value = '';
 };
 
@@ -272,6 +277,7 @@ const onModalCommentsFieldBlur = () => {
 };
 
 function openUploadFileModal () {
+  disablePreviewPhotoClick();
   uploadFileOverlay.classList.remove('hidden');
   uploadFileModal.classList.add('modal-open');
   uploadFileCancel.addEventListener('click', closeUploadFileModal);
@@ -297,11 +303,12 @@ function closeUploadFileModal () {
   hashTagsField.removeEventListener('blur', onModalHashtagFieldBlur);
   commentField.removeEventListener('focus', onModalCommentsFieldFocus);
   commentField.removeEventListener('blur', onModalCommentsFieldBlur);
-  resetPreviewImageScale();
   resetImageFilter();
+  resetPreviewImageScale();
   removeSliderToInput();
   removeSlider();
   resetFormFields();
+  onPreviewPhotoClick();
 }
 
 const showLoadingMessage = () => {
