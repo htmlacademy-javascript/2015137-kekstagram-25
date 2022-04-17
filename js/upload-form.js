@@ -1,13 +1,11 @@
 import { uploadUserData } from './data-api.js';
-import { openErrorUploadModal } from './upload-modal.js';
-import { openSuccessUploadModal } from './upload-modal.js';
-import { showLoadingMessage } from './upload-modal.js';
-import { closeLoadingMessage } from './upload-modal.js';
+import { openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage } from './upload-modal.js';
 
-const uploadForm = document.querySelector('.img-upload__form');
 const HASHTAG_PATTERN = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
 const EMPTY_SPACES_PATTERN = /\s+/g;
 const MAX_HASHTAGS = 5;
+
+const uploadForm = document.querySelector('.img-upload__form');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__text',

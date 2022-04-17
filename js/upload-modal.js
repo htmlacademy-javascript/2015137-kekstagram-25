@@ -2,6 +2,21 @@ import { isEscapeKey } from './util.js';
 import { setListenerOnSubmit, removeListenerFromSubmit } from './upload-form.js';
 import { onPreviewPhotoClick, disablePreviewPhotoClick } from './draw-full-size.js';
 
+const MAX_SCALE_VALUE = 100;
+const MIN_SCALE_VALUE = 25;
+const MAX_RANGE = 3;
+const MIN_STEP = 0.1;
+const DECIMAL = 10;
+
+const PhotoFilter = {
+  NONE: {name: 'none', units: ''},
+  CHROME: {name: 'grayscale', units: ''},
+  SEPIA: {name: 'sepia', units: ''},
+  MARVIN: {name: 'invert', units: '%'},
+  PHOBOS: {name: 'blur', units: 'px'},
+  HEAT: {name: 'brightness', units: ''}
+};
+
 const uploadFile = document.querySelector('#upload-file');
 const uploadFileOverlay = document.querySelector('.img-upload__overlay');
 const uploadFileModal = document.querySelector('body');
@@ -24,21 +39,6 @@ const photoEffectSepia = document.querySelector('#effect-sepia');
 const photoEffectMarvin = document.querySelector('#effect-marvin');
 const photoEffectPhobos = document.querySelector('#effect-phobos');
 const photoEffectHeat = document.querySelector('#effect-heat');
-
-const MAX_SCALE_VALUE = 100;
-const MIN_SCALE_VALUE = 25;
-const MAX_RANGE = 3;
-const MIN_STEP = 0.1;
-const DECIMAL = 10;
-
-const PhotoFilter = {
-  NONE: {name: 'none', units: ''},
-  CHROME: {name: 'grayscale', units: ''},
-  SEPIA: {name: 'sepia', units: ''},
-  MARVIN: {name: 'invert', units: '%'},
-  PHOBOS: {name: 'blur', units: 'px'},
-  HEAT: {name: 'brightness', units: ''}
-};
 
 const createSlider = () => {
   intensitySliderElement.style.display = 'none';

@@ -3,14 +3,14 @@ import { drawPhotoPosts } from './draw-photo.js';
 import { shuffleArrayElements } from './util.js';
 import { debounce } from './util.js';
 
+const DRAW_PHOTO_DELAY = 500;
+const UNIC_POST_NUMBER = 10;
+const POST_NUMBER_TO_DELETE = 15;
+
 const filterElement = document.querySelector('.img-filters');
 const filterButtonRandom = document.querySelector('#filter-random');
 const filterButtonDiscussed = document.querySelector('#filter-discussed');
 const filterButtonDefault = document.querySelector('#filter-default');
-
-const DRAW_PHOTO_DELAY = 500;
-const UNIC_POST_NUMBER = 10;
-const POST_NUMBER_TO_DELETE = 15;
 
 let defaultPostsData = [];
 

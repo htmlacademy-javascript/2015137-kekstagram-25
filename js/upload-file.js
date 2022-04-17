@@ -1,7 +1,7 @@
+const VALID_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'png'];
+
 const pickedUserImage = document.querySelector('.img-upload__input');
 const imagePreviewElement = document.querySelector('div.img-upload__preview img');
-
-const VALID_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'png'];
 
 const onUploadFileChange = () => {
   const pickedFile = pickedUserImage.files[0];

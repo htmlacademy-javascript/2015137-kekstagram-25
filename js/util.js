@@ -17,8 +17,6 @@ const getRandomRoundNumber = (firstNumber, secondNumber) => {
   return Math.floor(Math.random() * (firstNumber - secondNumber + 1)) + secondNumber;
 };
 
-const checkStringLength = (string, maxLength) => (string.length <= maxLength);
-
 const getRandomArrayElement = (elements) => elements[getRandomRoundNumber(0, elements.length - 1)];
 
 const showLoadErrorMessage = (errorText) => {
@@ -45,7 +43,5 @@ const debounce = (cb, timeoutDelay) => {
     timeoutId = setTimeout(() => cb.apply(this, rest), timeoutDelay);
   };
 };
-
-checkStringLength('some', 10);
 
 export {getRandomRoundNumber, getRandomArrayElement, isEscapeKey, showLoadErrorMessage, shuffleArrayElements, debounce};
