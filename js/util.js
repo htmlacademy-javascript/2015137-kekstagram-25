@@ -17,8 +17,6 @@ const getRandomRoundNumber = (firstNumber, secondNumber) => {
   return Math.floor(Math.random() * (firstNumber - secondNumber + 1)) + secondNumber;
 };
 
-const getRandomArrayElement = (elements) => elements[getRandomRoundNumber(0, elements.length - 1)];
-
 const showLoadErrorMessage = (errorText) => {
   const errorContainer = document.createElement('div');
   errorContainer.classList.add('.user-data__load__error');
@@ -44,4 +42,4 @@ const debounce = (cb, timeoutDelay) => {
   };
 };
 
-export {getRandomRoundNumber, getRandomArrayElement, isEscapeKey, showLoadErrorMessage, shuffleArrayElements, debounce};
+export {getRandomRoundNumber, isEscapeKey, showLoadErrorMessage, shuffleArrayElements, debounce};
