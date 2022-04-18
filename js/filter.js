@@ -8,9 +8,9 @@ const UNIC_POST_NUMBER = 10;
 const POST_NUMBER_TO_DELETE = 15;
 
 const filterElement = document.querySelector('.img-filters');
-const filterButtonRandom = document.querySelector('#filter-random');
-const filterButtonDiscussed = document.querySelector('#filter-discussed');
-const filterButtonDefault = document.querySelector('#filter-default');
+const filterButtonRandomElement = document.querySelector('#filter-random');
+const filterButtonDiscussedElement = document.querySelector('#filter-discussed');
+const filterButtonDefaultElement = document.querySelector('#filter-default');
 
 let defaultPostsData = [];
 
@@ -55,13 +55,13 @@ const selectedFilterApply = (evt) => {
     evt.target.classList.add('img-filters__button--active');
 
     switch (evt.target.id) {
-      case (filterButtonRandom.id):
+      case (filterButtonRandomElement.id):
         showRandomPhotoPosts();
         break;
-      case (filterButtonDiscussed.id):
+      case (filterButtonDiscussedElement.id):
         showMostDiscussedPhotoPosts();
         break;
-      case (filterButtonDefault.id):
+      case (filterButtonDefaultElement.id):
         showDefaultPhotoPosts();
         break;
       default:

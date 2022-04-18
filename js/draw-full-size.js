@@ -7,23 +7,23 @@ const COMMENTS_PORTION = 5;
 const COMMENT_COUNT_PATTERN = /^[0-9]{1,9}/;
 const URL_PATTERN = /photos\/+[0-9]{1,9}.jpg/g;
 
-const fullSizeContainer = document.querySelector('.big-picture');
-const bigPhotoElement = fullSizeContainer.querySelector('div.big-picture__img img');
-const authorCommentElement = fullSizeContainer.querySelector('div.big-picture__social p.social__caption');
-const likesElement = fullSizeContainer.querySelector('span.likes-count');
-const allCommentsElement = fullSizeContainer.querySelector('.comments-count');
-const shownCommentsElement = fullSizeContainer.querySelector('.social__comment-count').childNodes[0];
-const loadMoreCommentsElement = fullSizeContainer.querySelector('.comments-loader');
-const closeFullPictureButton = fullSizeContainer.querySelector('.big-picture__cancel');
-const socialCommentContainer = fullSizeContainer.querySelector('.social__comments');
+const fullSizeContainerElement = document.querySelector('.big-picture');
+const bigPhotoElement = fullSizeContainerElement.querySelector('div.big-picture__img img');
+const authorCommentElement = fullSizeContainerElement.querySelector('div.big-picture__social p.social__caption');
+const likesElement = fullSizeContainerElement.querySelector('span.likes-count');
+const allCommentsElement = fullSizeContainerElement.querySelector('.comments-count');
+const shownCommentsElement = fullSizeContainerElement.querySelector('.social__comment-count').childNodes[0];
+const loadMoreCommentsElement = fullSizeContainerElement.querySelector('.comments-loader');
+const closeFullPictureButtonElement = fullSizeContainerElement.querySelector('.big-picture__cancel');
+const socialCommentContainerElement = fullSizeContainerElement.querySelector('.social__comments');
 
 let currentPhotoPostComments = [];
 
 const getPhotoUrl = (someUrl) => someUrl.match(URL_PATTERN).join();
 
 const removePhotoComments = () => {
-  while(socialCommentContainer.firstChild) {
-    socialCommentContainer.firstChild.remove();
+  while(socialCommentContainerElement.firstChild) {
+    socialCommentContainerElement.firstChild.remove();
   }
 };
 
@@ -58,7 +58,7 @@ const createPhotoComments = () => {
     loadMoreCommentsElement.classList.add('hidden');
   }
   increaseCommentsCount(createdCommentsCount);
-  socialCommentContainer.append(newCommentsContainer);
+  socialCommentContainerElement.append(newCommentsContainer);
 };
 
 const resetCommentCount = () => {
@@ -99,9 +99,9 @@ const onFullPictureEscKeydown = (evt) => {
 function openFullPicture (evt) {
   const clickedElement = evt.target;
   if (clickedElement.closest('img')) {
-    closeFullPictureButton.addEventListener('click', closeFullPicture);
+    closeFullPictureButtonElement.addEventListener('click', closeFullPicture);
     document.addEventListener('keydown', onFullPictureEscKeydown);
-    fullSizeContainer.classList.remove('hidden');
+    fullSizeContainerElement.classList.remove('hidden');
     loadMoreCommentsElement.classList.remove('hidden');
     resetCommentCount();
     removePhotoComments();
@@ -111,11 +111,11 @@ function openFullPicture (evt) {
 }
 
 function closeFullPicture () {
-  closeFullPictureButton.removeEventListener('click', closeFullPicture);
+  closeFullPictureButtonElement.removeEventListener('click', closeFullPicture);
   document.removeEventListener('keydown', onFullPictureEscKeydown);
   loadMoreCommentsElement.removeEventListener('click', createPhotoComments);
   uploadFileModal.classList.remove('modal-open');
-  fullSizeContainer.classList.add('hidden');
+  fullSizeContainerElement.classList.add('hidden');
   resetCommentCount();
   onPreviewPhotoClick();
 }
