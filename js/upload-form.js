@@ -64,12 +64,8 @@ const onSubmitButtonClick = (evt) => {
   }
 };
 
-const removeListenerFromSubmit = () => {
-  uploadFormElement.removeEventListener('submit', onSubmitButtonClick, {once: true});
-};
-
 const setListenerOnSubmit = () => {
   uploadFormElement.addEventListener('submit', onSubmitButtonClick, {once: true});
 };
 
-export {setListenerOnSubmit, removeListenerFromSubmit};
+export {setListenerOnSubmit};

@@ -1,6 +1,6 @@
 import { photoContainerElement } from './draw-photo.js';
 import { defaultPostsData } from './filter.js';
-import { uploadFileModal } from './upload-modal.js';
+import { uploadFileModalElement } from './upload-modal.js';
 import { isEscapeKey } from './util.js';
 
 const COMMENTS_PORTION = 5;
@@ -78,7 +78,7 @@ const showFullPicture = (evt) => {
   currentPhotoPostComments = defaultPostsData.find((post) => post.url === clickedPost).comments.slice();
   createPhotoComments(currentPhotoPostComments);
   onMoreCommentsButtonClickListener();
-  uploadFileModal.classList.add('modal-open');
+  uploadFileModalElement.classList.add('modal-open');
 };
 
 const disablePreviewPhotoClick = () => {
@@ -114,7 +114,7 @@ function closeFullPicture () {
   closeFullPictureButtonElement.removeEventListener('click', closeFullPicture);
   document.removeEventListener('keydown', onFullPictureEscKeydown);
   loadMoreCommentsElement.removeEventListener('click', createPhotoComments);
-  uploadFileModal.classList.remove('modal-open');
+  uploadFileModalElement.classList.remove('modal-open');
   fullSizeContainerElement.classList.add('hidden');
   resetCommentCount();
   onPreviewPhotoClick();

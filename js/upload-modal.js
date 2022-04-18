@@ -1,5 +1,5 @@
 import { isEscapeKey } from './util.js';
-import { setListenerOnSubmit, removeListenerFromSubmit } from './upload-form.js';
+import { setListenerOnSubmit} from './upload-form.js';
 import { onPreviewPhotoClick, disablePreviewPhotoClick } from './draw-full-size.js';
 
 const MAX_SCALE_VALUE = 100;
@@ -303,7 +303,6 @@ function closeUploadFileModalElement () {
   hashTagsFieldElement.removeEventListener('blur', onModalHashtagFieldBlur);
   commentFieldElement.removeEventListener('focus', onModalCommentsFieldFocus);
   commentFieldElement.removeEventListener('blur', onModalCommentsFieldBlur);
-  removeListenerFromSubmit();
   resetImageFilter();
   resetPreviewImageScale();
   removeSlider();
