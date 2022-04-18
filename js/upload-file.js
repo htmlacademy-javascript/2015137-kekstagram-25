@@ -1,15 +1,15 @@
-const VALID_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'png'];
+const EXTENSIONS = ['gif', 'jpg', 'jpeg', 'png'];
 
-const pickedUserImage = document.querySelector('.img-upload__input');
+const pickedUserImageElement = document.querySelector('.img-upload__input');
 const imagePreviewElement = document.querySelector('div.img-upload__preview img');
 
 const onUploadFileChange = () => {
-  const pickedFile = pickedUserImage.files[0];
+  const pickedFile = pickedUserImageElement.files[0];
   const fileName = pickedFile.name.toLowerCase();
-  const checkFiledExtension = VALID_EXTENSIONS.some((extension) => fileName.endsWith(extension));
+  const checkFiledExtension = EXTENSIONS.some((extension) => fileName.endsWith(extension));
   if (checkFiledExtension) {
     imagePreviewElement.src = URL.createObjectURL(pickedFile);
   }
 };
 
-pickedUserImage.addEventListener('change', onUploadFileChange);
+pickedUserImageElement.addEventListener('change', onUploadFileChange);
