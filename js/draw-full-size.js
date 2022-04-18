@@ -48,9 +48,9 @@ const increaseCommentsCount = (commentsAmount) => {
 
 const createPhotoComments = () => {
   const newCommentsContainer = document.createDocumentFragment();
-  const photoPhostCommentsPart = currentPhotoPostComments.splice(0, COMMENTS_PORTION);
+  const photoPostCommentsPart = currentPhotoPostComments.splice(0, COMMENTS_PORTION);
   let createdCommentsCount = 0;
-  photoPhostCommentsPart.forEach((comment) => {
+  photoPostCommentsPart.forEach((comment) => {
     newCommentsContainer.append(createNewComment(comment));
     createdCommentsCount++;
   });
