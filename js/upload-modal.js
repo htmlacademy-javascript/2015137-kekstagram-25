@@ -1,6 +1,6 @@
 import { isEscapeKey } from './util.js';
 import { setListenerOnSubmit} from './upload-form.js';
-import { onPreviewPhotoClick, disablePreviewPhotoClick } from './draw-full-size.js';
+import { setPreviewPhotoClickListener, disablePreviewPhotoClickListener } from './draw-full-size.js';
 
 const MAX_SCALE_VALUE = 100;
 const MIN_SCALE_VALUE = 25;
@@ -114,7 +114,7 @@ const resetImageFilter = () => {
   intensitySliderElement.style.display = 'block';
 };
 
-const photoEffectChromeElementApply = () => {
+const applyPhotoEffectChrome = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -127,7 +127,7 @@ const photoEffectChromeElementApply = () => {
   setChromeIntensity();
 };
 
-const photoEffectSepiaElementApply = () => {
+const applyPhotoEffectSepia = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -140,7 +140,7 @@ const photoEffectSepiaElementApply = () => {
   setSepiaIntensity();
 };
 
-const photoEffectMarvinElementApply = () => {
+const applyPhotoEffectMarvin = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -153,7 +153,7 @@ const photoEffectMarvinElementApply = () => {
   setMarvinIntensity();
 };
 
-const photoEffectPhobosElementApply = () => {
+const applyPhotoEffectPhobos = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -166,7 +166,7 @@ const photoEffectPhobosElementApply = () => {
   setPhobosIntensity();
 };
 
-const photoEffectHeatElementApply = () => {
+const applyPhotoEffectHeat = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 1,
@@ -179,26 +179,26 @@ const photoEffectHeatElementApply = () => {
   setHeatIntensity();
 };
 
-const onPhotoEffectClick = (evt) => {
+const pickClickedPhotoEffect = (evt) => {
   const clickedElement = evt.target;
   if (clickedElement.closest('.effects__radio')) {
     resetImageFilter();
     evt.target.checked = true;
     switch (evt.target.value) {
       case (photoEffectChromeElement.value):
-        photoEffectChromeElementApply();
+        applyPhotoEffectChrome();
         break;
       case (photoEffectSepiaElement.value):
-        photoEffectSepiaElementApply();
+        applyPhotoEffectSepia();
         break;
       case (photoEffectMarvinElement.value):
-        photoEffectMarvinElementApply();
+        applyPhotoEffectMarvin();
         break;
       case (photoEffectPhobosElement.value):
-        photoEffectPhobosElementApply();
+        applyPhotoEffectPhobos();
         break;
       case (photoEffectHeatElement.value):
-        photoEffectHeatElementApply();
+        applyPhotoEffectHeat();
         break;
       default:
         intensitySliderElement.style.display = 'none';
@@ -208,21 +208,21 @@ const onPhotoEffectClick = (evt) => {
   }
 };
 
-const onModalEscKeydown = (evt) => {
+const checkModalEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeUploadFileModalElement();
   }
 };
 
-const onSuccessEscKeydown = (evt) => {
+const checkSuccessEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeSuccessUploadModal();
   }
 };
 
-const onErrorEscKeydown = (evt) => {
+const checkErrorEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeErrorUploadModal();
@@ -244,7 +244,7 @@ const resetPreviewImageScale = () => {
   photoEffectPreviewElement.style.transform = '';
 };
 
-const onScaleControlIncreaseClick = () => {
+const increaseImageScale = () => {
   const parsedScaleValue = parseInt(scaleControlInputElement.value, DECIMAL);
   if (parsedScaleValue !== MAX_SCALE_VALUE) {
     scaleControlInputElement.value = `${parsedScaleValue + MIN_SCALE_VALUE  }%`;
@@ -252,7 +252,7 @@ const onScaleControlIncreaseClick = () => {
   }
 };
 
-const onScaleControlDecreaseClick = () => {
+const decreaseImageScale = () => {
   const parsedScaleValue = parseInt(scaleControlInputElement.value, DECIMAL);
   if (parsedScaleValue !== MIN_SCALE_VALUE) {
     scaleControlInputElement.value = `${parsedScaleValue - MIN_SCALE_VALUE  }%`;
@@ -260,37 +260,37 @@ const onScaleControlDecreaseClick = () => {
   }
 };
 
-const onModalHashtagFieldFocus = () => {
-  document.removeEventListener('keydown', onModalEscKeydown);
+const removeHashtagFieldListener = () => {
+  document.removeEventListener('keydown', checkModalEscKeydown);
 };
 
-const onModalHashtagFieldBlur = () => {
-  document.addEventListener('keydown', onModalEscKeydown);
+const setHashtagFieldListener = () => {
+  document.addEventListener('keydown', checkModalEscKeydown);
 };
 
-const onModalCommentsFieldFocus = () => {
-  document.removeEventListener('keydown', onModalEscKeydown);
+const removeCommentsFieldListener = () => {
+  document.removeEventListener('keydown', checkModalEscKeydown);
 };
 
-const onModalCommentsFieldBlur = () => {
-  document.addEventListener('keydown', onModalEscKeydown);
+const setCommentsFieldListener = () => {
+  document.addEventListener('keydown', checkModalEscKeydown);
 };
 
 function openUploadFileModalElement () {
-  disablePreviewPhotoClick();
+  disablePreviewPhotoClickListener();
   uploadFileOverlayElement.classList.remove('hidden');
   uploadFileModalElement.classList.add('modal-open');
   uploadFileCancelElement.addEventListener('click', closeUploadFileModalElement);
-  document.addEventListener('keydown', onModalEscKeydown);
+  document.addEventListener('keydown', checkModalEscKeydown);
   createSlider();
   attachSliderToInput();
-  scaleButtonIncreaseElement.addEventListener('click', onScaleControlIncreaseClick);
-  scaleButtonDecreaseElement.addEventListener('click', onScaleControlDecreaseClick);
-  radioButtonsFieldSetNode.addEventListener('change', onPhotoEffectClick);
-  hashTagsFieldElement.addEventListener('focus', onModalHashtagFieldFocus);
-  hashTagsFieldElement.addEventListener('blur', onModalHashtagFieldBlur);
-  commentFieldElement.addEventListener('focus', onModalCommentsFieldFocus);
-  commentFieldElement.addEventListener('blur', onModalCommentsFieldBlur);
+  scaleButtonIncreaseElement.addEventListener('click', increaseImageScale);
+  scaleButtonDecreaseElement.addEventListener('click', decreaseImageScale);
+  radioButtonsFieldSetNode.addEventListener('change', pickClickedPhotoEffect);
+  hashTagsFieldElement.addEventListener('focus', removeHashtagFieldListener);
+  hashTagsFieldElement.addEventListener('blur', setHashtagFieldListener);
+  commentFieldElement.addEventListener('focus', removeCommentsFieldListener);
+  commentFieldElement.addEventListener('blur', setCommentsFieldListener);
   setListenerOnSubmit();
 }
 
@@ -298,16 +298,16 @@ function closeUploadFileModalElement () {
   uploadFileOverlayElement.classList.add('hidden');
   uploadFileModalElement.classList.remove('modal-open');
   uploadFileCancelElement.removeEventListener('click', closeUploadFileModalElement);
-  document.removeEventListener('keydown', onModalEscKeydown);
-  hashTagsFieldElement.removeEventListener('focus', onModalHashtagFieldFocus);
-  hashTagsFieldElement.removeEventListener('blur', onModalHashtagFieldBlur);
-  commentFieldElement.removeEventListener('focus', onModalCommentsFieldFocus);
-  commentFieldElement.removeEventListener('blur', onModalCommentsFieldBlur);
+  document.removeEventListener('keydown', checkModalEscKeydown);
+  hashTagsFieldElement.removeEventListener('focus', removeHashtagFieldListener);
+  hashTagsFieldElement.removeEventListener('blur', setHashtagFieldListener);
+  commentFieldElement.removeEventListener('focus', removeCommentsFieldListener);
+  commentFieldElement.removeEventListener('blur', setCommentsFieldListener);
   resetImageFilter();
   resetPreviewImageScale();
   removeSlider();
   resetFormFields();
-  onPreviewPhotoClick();
+  setPreviewPhotoClickListener();
 }
 
 const showLoadingMessage = () => {
@@ -320,7 +320,7 @@ const closeLoadingMessage = () => {
   submitButtonElement.textContent = 'Опубликовать';
 };
 
-const onClickOutsideSuccessModal = (evt) => {
+const checkClickOutsideSuccessModal = (evt) => {
   const currentElement = evt.target;
   if (!currentElement.closest('.success__inner')) {
     closeSuccessUploadModal();
@@ -331,19 +331,19 @@ function openSuccessUploadModal () {
   const successModal = successUploadTemplateNode.cloneNode(true);
   const closeButton = successModal.querySelector('.success__button');
   closeButton.addEventListener('click', closeSuccessUploadModal);
-  document.addEventListener('keydown', onSuccessEscKeydown);
-  document.addEventListener('click', onClickOutsideSuccessModal);
+  document.addEventListener('keydown', checkSuccessEscKeydown);
+  document.addEventListener('click', checkClickOutsideSuccessModal);
   document.body.appendChild(successModal);
   closeUploadFileModalElement();
 }
 
 function closeSuccessUploadModal () {
-  document.removeEventListener('keydown', onSuccessEscKeydown);
-  document.removeEventListener('click', onClickOutsideSuccessModal);
+  document.removeEventListener('keydown', checkSuccessEscKeydown);
+  document.removeEventListener('click', checkClickOutsideSuccessModal);
   document.body.lastChild.remove();
 }
 
-const onClickOutsideErrorModal = (evt) => {
+const checkClickOutsideErrorModal = (evt) => {
   const currentElement = evt.target;
   if (!currentElement.closest('.error__inner')) {
     closeErrorUploadModal();
@@ -354,15 +354,15 @@ function openErrorUploadModal () {
   const errorModal = errorUploadTemplateNode.cloneNode(true);
   const closeButton = errorModal.querySelector('.error__button');
   closeButton.addEventListener('click', closeErrorUploadModal);
-  document.addEventListener('keydown', onErrorEscKeydown);
-  document.addEventListener('click', onClickOutsideErrorModal);
+  document.addEventListener('keydown', checkErrorEscKeydown);
+  document.addEventListener('click', checkClickOutsideErrorModal);
   document.body.appendChild(errorModal);
   closeUploadFileModalElement();
 }
 
 function closeErrorUploadModal () {
-  document.removeEventListener('keydown', onErrorEscKeydown);
-  document.removeEventListener('click', onClickOutsideErrorModal);
+  document.removeEventListener('keydown', checkErrorEscKeydown);
+  document.removeEventListener('click', checkClickOutsideErrorModal);
   document.body.lastChild.remove();
 }
 const setUploadForm = () => {

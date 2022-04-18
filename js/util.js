@@ -27,14 +27,14 @@ const showLoadErrorMessage = (errorText) => {
   }, ERROR_SHOW_TIME);
 };
 
-const shuffleArrayElements = (someArray) => {
+const getShuffledArrayElements = (someArray) => {
   for (let i = 0; i < someArray.length - 1; i++) {
     const j = getRandomRoundNumber(0, 1) * (i + 1);
     [someArray[i], someArray[j]] = [someArray[j], someArray[i]];
   }
 };
 
-const debounce = (cb, timeoutDelay) => {
+const useDebounce = (cb, timeoutDelay) => {
   let timeoutId;
   return (...rest) => {
     clearTimeout(timeoutId);
@@ -42,4 +42,4 @@ const debounce = (cb, timeoutDelay) => {
   };
 };
 
-export {getRandomRoundNumber, isEscapeKey, showLoadErrorMessage, shuffleArrayElements, debounce};
+export {getRandomRoundNumber, isEscapeKey, showLoadErrorMessage, getShuffledArrayElements, useDebounce};

@@ -65,7 +65,7 @@ const resetCommentCount = () => {
   shownCommentsElement.textContent = shownCommentsElement.textContent.replace(COMMENT_COUNT_PATTERN, 0);
 };
 
-const onMoreCommentsButtonClickListener = () => {
+const setMoreCommentsButtonClickListener = () => {
   loadMoreCommentsElement.addEventListener('click', createPhotoComments);
 };
 
@@ -77,19 +77,19 @@ const showFullPicture = (evt) => {
   authorCommentElement.textContent = defaultPostsData.find((post) => post.url === clickedPost).description;
   currentPhotoPostComments = defaultPostsData.find((post) => post.url === clickedPost).comments.slice();
   createPhotoComments(currentPhotoPostComments);
-  onMoreCommentsButtonClickListener();
+  setMoreCommentsButtonClickListener();
   uploadFileModalElement.classList.add('modal-open');
 };
 
-const disablePreviewPhotoClick = () => {
+const disablePreviewPhotoClickListener = () => {
   photoContainerElement.removeEventListener('click', openFullPicture);
 };
 
-const onPreviewPhotoClick = () => {
+const setPreviewPhotoClickListener = () => {
   photoContainerElement.addEventListener('click', openFullPicture);
 };
 
-const onFullPictureEscKeydown = (evt) => {
+const checkFullPictureEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeFullPicture();
@@ -100,24 +100,24 @@ function openFullPicture (evt) {
   const clickedElement = evt.target;
   if (clickedElement.closest('img')) {
     closeFullPictureButtonElement.addEventListener('click', closeFullPicture);
-    document.addEventListener('keydown', onFullPictureEscKeydown);
+    document.addEventListener('keydown', checkFullPictureEscKeydown);
     fullSizeContainerElement.classList.remove('hidden');
     loadMoreCommentsElement.classList.remove('hidden');
     resetCommentCount();
     removePhotoComments();
-    disablePreviewPhotoClick();
+    disablePreviewPhotoClickListener();
     showFullPicture(evt);
   }
 }
 
 function closeFullPicture () {
   closeFullPictureButtonElement.removeEventListener('click', closeFullPicture);
-  document.removeEventListener('keydown', onFullPictureEscKeydown);
+  document.removeEventListener('keydown', checkFullPictureEscKeydown);
   loadMoreCommentsElement.removeEventListener('click', createPhotoComments);
   uploadFileModalElement.classList.remove('modal-open');
   fullSizeContainerElement.classList.add('hidden');
   resetCommentCount();
-  onPreviewPhotoClick();
+  setPreviewPhotoClickListener();
 }
 
-export {onPreviewPhotoClick, disablePreviewPhotoClick};
+export {setPreviewPhotoClickListener, disablePreviewPhotoClickListener};

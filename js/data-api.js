@@ -17,7 +17,7 @@ const getUsersData = (onRecived, onError) => {
     });
 };
 
-const uploadUserData = (onSuccess, onError, userForm) => {
+const sendUserData = (onSuccess, onError, userForm) => {
   fetch(TO_SERVER,
     {
       method: 'POST',
@@ -34,4 +34,4 @@ const uploadUserData = (onSuccess, onError, userForm) => {
     .catch((err) => onError(err));
 };
 
-export {getUsersData, uploadUserData};
+export {getUsersData, sendUserData};

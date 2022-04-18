@@ -1,4 +1,4 @@
-import { uploadUserData } from './data-api.js';
+import { sendUserData } from './data-api.js';
 import { openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage } from './upload-modal.js';
 
 const HASHTAG_PATTERN = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
@@ -45,12 +45,12 @@ pristine.addValidator(uploadFormElement.querySelector('.text__hashtags'),
   getHashtagsErrorMessage
 );
 
-const onSubmitButtonClick = (evt) => {
+const sendValidatedUserData = (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   if (isValid) {
     showLoadingMessage();
-    uploadUserData(
+    sendUserData(
       () => {
         closeLoadingMessage();
         openSuccessUploadModal();
@@ -65,7 +65,7 @@ const onSubmitButtonClick = (evt) => {
 };
 
 const setListenerOnSubmit = () => {
-  uploadFormElement.addEventListener('submit', onSubmitButtonClick, {once: true});
+  uploadFormElement.addEventListener('submit', sendValidatedUserData, {once: true});
 };
 
 export {setListenerOnSubmit};
