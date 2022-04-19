@@ -1,16 +1,16 @@
 import { clearPhotoPosts } from './draw-photo.js';
 import { drawPhotoPosts } from './draw-photo.js';
-import { shuffleArrayElements } from './util.js';
-import { debounce } from './util.js';
+import { getShuffledArrayElements } from './util.js';
+import { useDebounce } from './util.js';
 
 const DRAW_PHOTO_DELAY = 500;
 const UNIC_POST_NUMBER = 10;
 const POST_NUMBER_TO_DELETE = 15;
 
 const filterElement = document.querySelector('.img-filters');
-const filterButtonRandom = document.querySelector('#filter-random');
-const filterButtonDiscussed = document.querySelector('#filter-discussed');
-const filterButtonDefault = document.querySelector('#filter-default');
+const filterButtonRandomElement = document.querySelector('#filter-random');
+const filterButtonDiscussedElement = document.querySelector('#filter-discussed');
+const filterButtonDefaultElement = document.querySelector('#filter-default');
 
 let defaultPostsData = [];
 
@@ -38,7 +38,7 @@ const showMostDiscussedPhotoPosts = () => {
 
 const showRandomPhotoPosts = () => {
   const randomPostData = defaultPostsData.slice();
-  shuffleArrayElements(randomPostData);
+  getShuffledArrayElements(randomPostData);
   randomPostData.splice(UNIC_POST_NUMBER, POST_NUMBER_TO_DELETE);
   clearPhotoPosts();
   drawPhotoPosts(randomPostData);
@@ -48,20 +48,20 @@ const clearButtonFilterClass = () => {
   filterElement.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
 };
 
-const selectedFilterApply = (evt) => {
+const applySelectedFilter = (evt) => {
   const clickedElement = evt.target;
   if (clickedElement.closest('.img-filters__button')) {
     clearButtonFilterClass();
     evt.target.classList.add('img-filters__button--active');
 
     switch (evt.target.id) {
-      case (filterButtonRandom.id):
+      case (filterButtonRandomElement.id):
         showRandomPhotoPosts();
         break;
-      case (filterButtonDiscussed.id):
+      case (filterButtonDiscussedElement.id):
         showMostDiscussedPhotoPosts();
         break;
-      case (filterButtonDefault.id):
+      case (filterButtonDefaultElement.id):
         showDefaultPhotoPosts();
         break;
       default:
@@ -73,7 +73,7 @@ const selectedFilterApply = (evt) => {
 
 const setFilterButtonClickListener = () => {
   filterElement.classList.remove('img-filters--inactive');
-  filterElement.addEventListener('click', debounce(selectedFilterApply, DRAW_PHOTO_DELAY));
+  filterElement.addEventListener('click', useDebounce(applySelectedFilter, DRAW_PHOTO_DELAY));
 };
 
 const getDefaultPhotoPostData = (someData) => {
@@ -81,4 +81,4 @@ const getDefaultPhotoPostData = (someData) => {
   setFilterButtonClickListener();
 };
 
-export {getDefaultPhotoPostData, selectedFilterApply, defaultPostsData};
+export {getDefaultPhotoPostData, applySelectedFilter, defaultPostsData};

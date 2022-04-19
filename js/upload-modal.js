@@ -1,6 +1,6 @@
 import { isEscapeKey } from './util.js';
-import { setListenerOnSubmit, removeListenerFromSubmit } from './upload-form.js';
-import { onPreviewPhotoClick, disablePreviewPhotoClick } from './draw-full-size.js';
+import { setListenerOnSubmit} from './upload-form.js';
+import { setPreviewPhotoClickListener, disablePreviewPhotoClickListener } from './draw-full-size.js';
 
 const MAX_SCALE_VALUE = 100;
 const MIN_SCALE_VALUE = 25;
@@ -17,28 +17,28 @@ const PhotoFilter = {
   HEAT: {name: 'brightness', units: ''}
 };
 
-const uploadFile = document.querySelector('#upload-file');
-const uploadFileOverlay = document.querySelector('.img-upload__overlay');
-const uploadFileModal = document.querySelector('body');
-const uploadFileCancel = document.querySelector('#upload-cancel');
-const successUploadTemplate = document.querySelector('#success').content.querySelector('.success');
-const errorUploadTemplate = document.querySelector('#error').content.querySelector('.error');
-const submitButton = document.querySelector('.img-upload__submit');
-const hashTagsField = document.querySelector('.text__hashtags');
-const commentField = document.querySelector('.text__description');
-const photoEffectImage = document.querySelector('.img-upload__preview');
-const effectNoneCheckbox = document.querySelector('#effect-none');
-const scaleControlButtonIncrease = document.querySelector('.scale__control--bigger');
-const scaleControlButtonDecrease = document.querySelector('.scale__control--smaller');
-const scaleControlInput = document.querySelector('.scale__control--value');
+const uploadFileElement = document.querySelector('#upload-file');
+const uploadFileOverlayElement = document.querySelector('.img-upload__overlay');
+const uploadFileModalElement = document.querySelector('body');
+const uploadFileCancelElement = document.querySelector('#upload-cancel');
+const successUploadTemplateNode = document.querySelector('#success').content.querySelector('.success');
+const errorUploadTemplateNode = document.querySelector('#error').content.querySelector('.error');
+const submitButtonElement = document.querySelector('.img-upload__submit');
+const hashTagsFieldElement = document.querySelector('.text__hashtags');
+const commentFieldElement = document.querySelector('.text__description');
+const photoEffectPreviewElement = document.querySelector('.img-upload__preview');
+const effectNoneCheckboxElement = document.querySelector('#effect-none');
+const scaleButtonIncreaseElement = document.querySelector('.scale__control--bigger');
+const scaleButtonDecreaseElement = document.querySelector('.scale__control--smaller');
+const scaleControlInputElement = document.querySelector('.scale__control--value');
 const intensitySliderElement = document.querySelector('.effect-level__slider');
-const sliderElementInputValue = document.querySelector('.effect-level__value');
-const radioButtonsFieldSet = document.querySelector('.img-upload__effects');
-const photoEffectChrome = document.querySelector('#effect-chrome');
-const photoEffectSepia = document.querySelector('#effect-sepia');
-const photoEffectMarvin = document.querySelector('#effect-marvin');
-const photoEffectPhobos = document.querySelector('#effect-phobos');
-const photoEffectHeat = document.querySelector('#effect-heat');
+const sliderInputValueElement = document.querySelector('.effect-level__value');
+const radioButtonsFieldSetNode = document.querySelector('.img-upload__effects');
+const photoEffectChromeElement = document.querySelector('#effect-chrome');
+const photoEffectSepiaElement = document.querySelector('#effect-sepia');
+const photoEffectMarvinElement = document.querySelector('#effect-marvin');
+const photoEffectPhobosElement = document.querySelector('#effect-phobos');
+const photoEffectHeatElement = document.querySelector('#effect-heat');
 
 const createSlider = () => {
   intensitySliderElement.style.display = 'none';
@@ -72,49 +72,49 @@ const removeSlider = () => {
 
 const attachSliderToInput = () => {
   intensitySliderElement.noUiSlider.on('update', () => {
-    sliderElementInputValue.value = intensitySliderElement.noUiSlider.get();
+    sliderInputValueElement.value = intensitySliderElement.noUiSlider.get();
   });
 };
 
 const setChromeIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.CHROME.name}(${sliderElementInputValue.value}${PhotoFilter.CHROME.units})`;
+    photoEffectPreviewElement.style.filter = `${PhotoFilter.CHROME.name}(${sliderInputValueElement.value}${PhotoFilter.CHROME.units})`;
   });
 };
 
 const setSepiaIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.SEPIA.name}(${sliderElementInputValue.value}${PhotoFilter.SEPIA.units})`;
+    photoEffectPreviewElement.style.filter = `${PhotoFilter.SEPIA.name}(${sliderInputValueElement.value}${PhotoFilter.SEPIA.units})`;
   });
 };
 
 const setMarvinIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.MARVIN.name}(${sliderElementInputValue.value}${PhotoFilter.MARVIN.units})`;
+    photoEffectPreviewElement.style.filter = `${PhotoFilter.MARVIN.name}(${sliderInputValueElement.value}${PhotoFilter.MARVIN.units})`;
   });
 };
 
 const setPhobosIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.PHOBOS.name}(${sliderElementInputValue.value}${PhotoFilter.PHOBOS.units})`;
+    photoEffectPreviewElement.style.filter = `${PhotoFilter.PHOBOS.name}(${sliderInputValueElement.value}${PhotoFilter.PHOBOS.units})`;
   });
 };
 
 const setHeatIntensity = () => {
   intensitySliderElement.noUiSlider.on('update.filter', () => {
-    photoEffectImage.style.filter = `${PhotoFilter.HEAT.name}(${sliderElementInputValue.value}${PhotoFilter.HEAT.units})`;
+    photoEffectPreviewElement.style.filter = `${PhotoFilter.HEAT.name}(${sliderInputValueElement.value}${PhotoFilter.HEAT.units})`;
   });
 };
 
 const resetImageFilter = () => {
-  effectNoneCheckbox.setAttribute('checked', 'true');
-  effectNoneCheckbox.checked = true;
-  photoEffectImage.className = 'img-upload__preview';
-  photoEffectImage.style.filter = '';
+  effectNoneCheckboxElement.setAttribute('checked', 'true');
+  effectNoneCheckboxElement.checked = true;
+  photoEffectPreviewElement.className = 'img-upload__preview';
+  photoEffectPreviewElement.style.filter = '';
   intensitySliderElement.style.display = 'block';
 };
 
-const photoEffectChromeApply = () => {
+const applyPhotoEffectChrome = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -123,11 +123,11 @@ const photoEffectChromeApply = () => {
     start: 1,
     step: MIN_STEP,
   });
-  photoEffectImage.classList.add('effects__preview--chrome');
+  photoEffectPreviewElement.classList.add('effects__preview--chrome');
   setChromeIntensity();
 };
 
-const photoEffectSepiaApply = () => {
+const applyPhotoEffectSepia = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -136,11 +136,11 @@ const photoEffectSepiaApply = () => {
     start: 1,
     step: MIN_STEP,
   });
-  photoEffectImage.classList.add('effects__preview--sepia');
+  photoEffectPreviewElement.classList.add('effects__preview--sepia');
   setSepiaIntensity();
 };
 
-const photoEffectMarvinApply = () => {
+const applyPhotoEffectMarvin = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -149,11 +149,11 @@ const photoEffectMarvinApply = () => {
     start: MAX_SCALE_VALUE,
     step: 1,
   });
-  photoEffectImage.classList.add('effects__preview--marvin');
+  photoEffectPreviewElement.classList.add('effects__preview--marvin');
   setMarvinIntensity();
 };
 
-const photoEffectPhobosApply = () => {
+const applyPhotoEffectPhobos = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -162,11 +162,11 @@ const photoEffectPhobosApply = () => {
     start: MAX_RANGE,
     step: MIN_STEP,
   });
-  photoEffectImage.classList.add('effects__preview--phobos');
+  photoEffectPreviewElement.classList.add('effects__preview--phobos');
   setPhobosIntensity();
 };
 
-const photoEffectHeatApply = () => {
+const applyPhotoEffectHeat = () => {
   intensitySliderElement.noUiSlider.updateOptions({
     range: {
       min: 1,
@@ -175,54 +175,54 @@ const photoEffectHeatApply = () => {
     start: MAX_RANGE,
     step: MIN_STEP,
   });
-  photoEffectImage.classList.add('effects__preview--heat');
+  photoEffectPreviewElement.classList.add('effects__preview--heat');
   setHeatIntensity();
 };
 
-const onPhotoEffectClick = (evt) => {
+const pickClickedPhotoEffect = (evt) => {
   const clickedElement = evt.target;
   if (clickedElement.closest('.effects__radio')) {
     resetImageFilter();
     evt.target.checked = true;
     switch (evt.target.value) {
-      case (photoEffectChrome.value):
-        photoEffectChromeApply();
+      case (photoEffectChromeElement.value):
+        applyPhotoEffectChrome();
         break;
-      case (photoEffectSepia.value):
-        photoEffectSepiaApply();
+      case (photoEffectSepiaElement.value):
+        applyPhotoEffectSepia();
         break;
-      case (photoEffectMarvin.value):
-        photoEffectMarvinApply();
+      case (photoEffectMarvinElement.value):
+        applyPhotoEffectMarvin();
         break;
-      case (photoEffectPhobos.value):
-        photoEffectPhobosApply();
+      case (photoEffectPhobosElement.value):
+        applyPhotoEffectPhobos();
         break;
-      case (photoEffectHeat.value):
-        photoEffectHeatApply();
+      case (photoEffectHeatElement.value):
+        applyPhotoEffectHeat();
         break;
       default:
         intensitySliderElement.style.display = 'none';
-        photoEffectImage.style.filter = '';
+        photoEffectPreviewElement.style.filter = '';
         break;
     }
   }
 };
 
-const onModalEscKeydown = (evt) => {
+const checkModalEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeUploadFileModal();
+    closeUploadFileModalElement();
   }
 };
 
-const onSuccessEscKeydown = (evt) => {
+const checkSuccessEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeSuccessUploadModal();
   }
 };
 
-const onErrorEscKeydown = (evt) => {
+const checkErrorEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeErrorUploadModal();
@@ -230,98 +230,97 @@ const onErrorEscKeydown = (evt) => {
 };
 
 const resetFormFields = () => {
-  hashTagsField.value = '';
-  commentField.value = '';
-  uploadFile.value = '';
+  hashTagsFieldElement.value = '';
+  commentFieldElement.value = '';
+  uploadFileElement.value = '';
 };
 
 const changePreviewImageScale = () => {
-  photoEffectImage.style.transform = `scale(${parseInt(scaleControlInput.value, DECIMAL) / MAX_SCALE_VALUE})`;
+  photoEffectPreviewElement.style.transform = `scale(${parseInt(scaleControlInputElement.value, DECIMAL) / MAX_SCALE_VALUE})`;
 };
 
 const resetPreviewImageScale = () => {
-  scaleControlInput.value = '100%';
-  photoEffectImage.style.transform = '';
+  scaleControlInputElement.value = '100%';
+  photoEffectPreviewElement.style.transform = '';
 };
 
-const onScaleControlIncreaseClick = () => {
-  const parsedScaleValue = parseInt(scaleControlInput.value, DECIMAL);
+const increaseImageScale = () => {
+  const parsedScaleValue = parseInt(scaleControlInputElement.value, DECIMAL);
   if (parsedScaleValue !== MAX_SCALE_VALUE) {
-    scaleControlInput.value = `${parsedScaleValue + MIN_SCALE_VALUE  }%`;
+    scaleControlInputElement.value = `${parsedScaleValue + MIN_SCALE_VALUE  }%`;
     changePreviewImageScale();
   }
 };
 
-const onScaleControlDecreaseClick = () => {
-  const parsedScaleValue = parseInt(scaleControlInput.value, DECIMAL);
+const decreaseImageScale = () => {
+  const parsedScaleValue = parseInt(scaleControlInputElement.value, DECIMAL);
   if (parsedScaleValue !== MIN_SCALE_VALUE) {
-    scaleControlInput.value = `${parsedScaleValue - MIN_SCALE_VALUE  }%`;
+    scaleControlInputElement.value = `${parsedScaleValue - MIN_SCALE_VALUE  }%`;
     changePreviewImageScale();
   }
 };
 
-const onModalHashtagFieldFocus = () => {
-  document.removeEventListener('keydown', onModalEscKeydown);
+const removeHashtagFieldListener = () => {
+  document.removeEventListener('keydown', checkModalEscKeydown);
 };
 
-const onModalHashtagFieldBlur = () => {
-  document.addEventListener('keydown', onModalEscKeydown);
+const setHashtagFieldListener = () => {
+  document.addEventListener('keydown', checkModalEscKeydown);
 };
 
-const onModalCommentsFieldFocus = () => {
-  document.removeEventListener('keydown', onModalEscKeydown);
+const removeCommentsFieldListener = () => {
+  document.removeEventListener('keydown', checkModalEscKeydown);
 };
 
-const onModalCommentsFieldBlur = () => {
-  document.addEventListener('keydown', onModalEscKeydown);
+const setCommentsFieldListener = () => {
+  document.addEventListener('keydown', checkModalEscKeydown);
 };
 
-function openUploadFileModal () {
-  disablePreviewPhotoClick();
-  uploadFileOverlay.classList.remove('hidden');
-  uploadFileModal.classList.add('modal-open');
-  uploadFileCancel.addEventListener('click', closeUploadFileModal);
-  document.addEventListener('keydown', onModalEscKeydown);
+function openUploadFileModalElement () {
+  disablePreviewPhotoClickListener();
+  uploadFileOverlayElement.classList.remove('hidden');
+  uploadFileModalElement.classList.add('modal-open');
+  uploadFileCancelElement.addEventListener('click', closeUploadFileModalElement);
+  document.addEventListener('keydown', checkModalEscKeydown);
   createSlider();
   attachSliderToInput();
-  scaleControlButtonIncrease.addEventListener('click', onScaleControlIncreaseClick);
-  scaleControlButtonDecrease.addEventListener('click', onScaleControlDecreaseClick);
-  radioButtonsFieldSet.addEventListener('change', onPhotoEffectClick);
-  hashTagsField.addEventListener('focus', onModalHashtagFieldFocus);
-  hashTagsField.addEventListener('blur', onModalHashtagFieldBlur);
-  commentField.addEventListener('focus', onModalCommentsFieldFocus);
-  commentField.addEventListener('blur', onModalCommentsFieldBlur);
+  scaleButtonIncreaseElement.addEventListener('click', increaseImageScale);
+  scaleButtonDecreaseElement.addEventListener('click', decreaseImageScale);
+  radioButtonsFieldSetNode.addEventListener('change', pickClickedPhotoEffect);
+  hashTagsFieldElement.addEventListener('focus', removeHashtagFieldListener);
+  hashTagsFieldElement.addEventListener('blur', setHashtagFieldListener);
+  commentFieldElement.addEventListener('focus', removeCommentsFieldListener);
+  commentFieldElement.addEventListener('blur', setCommentsFieldListener);
   setListenerOnSubmit();
 }
 
-function closeUploadFileModal () {
-  uploadFileOverlay.classList.add('hidden');
-  uploadFileModal.classList.remove('modal-open');
-  uploadFileCancel.removeEventListener('click', closeUploadFileModal);
-  document.removeEventListener('keydown', onModalEscKeydown);
-  hashTagsField.removeEventListener('focus', onModalHashtagFieldFocus);
-  hashTagsField.removeEventListener('blur', onModalHashtagFieldBlur);
-  commentField.removeEventListener('focus', onModalCommentsFieldFocus);
-  commentField.removeEventListener('blur', onModalCommentsFieldBlur);
-  removeListenerFromSubmit();
+function closeUploadFileModalElement () {
+  uploadFileOverlayElement.classList.add('hidden');
+  uploadFileModalElement.classList.remove('modal-open');
+  uploadFileCancelElement.removeEventListener('click', closeUploadFileModalElement);
+  document.removeEventListener('keydown', checkModalEscKeydown);
+  hashTagsFieldElement.removeEventListener('focus', removeHashtagFieldListener);
+  hashTagsFieldElement.removeEventListener('blur', setHashtagFieldListener);
+  commentFieldElement.removeEventListener('focus', removeCommentsFieldListener);
+  commentFieldElement.removeEventListener('blur', setCommentsFieldListener);
   resetImageFilter();
   resetPreviewImageScale();
   removeSlider();
   resetFormFields();
-  onPreviewPhotoClick();
+  setPreviewPhotoClickListener();
 }
 
 const showLoadingMessage = () => {
-  submitButton.disabled = true;
-  submitButton.textContent = 'Загружаем';
+  submitButtonElement.disabled = true;
+  submitButtonElement.textContent = 'Загружаем';
 };
 
 const closeLoadingMessage = () => {
-  submitButton.disabled = false;
-  submitButton.textContent = 'Опубликовать';
+  submitButtonElement.disabled = false;
+  submitButtonElement.textContent = 'Опубликовать';
 };
 
-const onClickOutsideSuccessModal = (evt) => {
+const checkClickOutsideSuccessModal = (evt) => {
   const currentElement = evt.target;
   if (!currentElement.closest('.success__inner')) {
     closeSuccessUploadModal();
@@ -329,22 +328,22 @@ const onClickOutsideSuccessModal = (evt) => {
 };
 
 function openSuccessUploadModal () {
-  const successModal = successUploadTemplate.cloneNode(true);
+  const successModal = successUploadTemplateNode.cloneNode(true);
   const closeButton = successModal.querySelector('.success__button');
   closeButton.addEventListener('click', closeSuccessUploadModal);
-  document.addEventListener('keydown', onSuccessEscKeydown);
-  document.addEventListener('click', onClickOutsideSuccessModal);
+  document.addEventListener('keydown', checkSuccessEscKeydown);
+  document.addEventListener('click', checkClickOutsideSuccessModal);
   document.body.appendChild(successModal);
-  closeUploadFileModal();
+  closeUploadFileModalElement();
 }
 
 function closeSuccessUploadModal () {
-  document.removeEventListener('keydown', onSuccessEscKeydown);
-  document.removeEventListener('click', onClickOutsideSuccessModal);
+  document.removeEventListener('keydown', checkSuccessEscKeydown);
+  document.removeEventListener('click', checkClickOutsideSuccessModal);
   document.body.lastChild.remove();
 }
 
-const onClickOutsideErrorModal = (evt) => {
+const checkClickOutsideErrorModal = (evt) => {
   const currentElement = evt.target;
   if (!currentElement.closest('.error__inner')) {
     closeErrorUploadModal();
@@ -352,22 +351,22 @@ const onClickOutsideErrorModal = (evt) => {
 };
 
 function openErrorUploadModal () {
-  const errorModal = errorUploadTemplate.cloneNode(true);
+  const errorModal = errorUploadTemplateNode.cloneNode(true);
   const closeButton = errorModal.querySelector('.error__button');
   closeButton.addEventListener('click', closeErrorUploadModal);
-  document.addEventListener('keydown', onErrorEscKeydown);
-  document.addEventListener('click', onClickOutsideErrorModal);
+  document.addEventListener('keydown', checkErrorEscKeydown);
+  document.addEventListener('click', checkClickOutsideErrorModal);
   document.body.appendChild(errorModal);
-  closeUploadFileModal();
+  closeUploadFileModalElement();
 }
 
 function closeErrorUploadModal () {
-  document.removeEventListener('keydown', onErrorEscKeydown);
-  document.removeEventListener('click', onClickOutsideErrorModal);
+  document.removeEventListener('keydown', checkErrorEscKeydown);
+  document.removeEventListener('click', checkClickOutsideErrorModal);
   document.body.lastChild.remove();
 }
 const setUploadForm = () => {
-  uploadFile.addEventListener('change', openUploadFileModal);
+  uploadFileElement.addEventListener('change', openUploadFileModalElement);
 };
 
-export {openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage, setUploadForm, uploadFileModal, closeUploadFileModal};
+export {openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage, setUploadForm, uploadFileModalElement, closeUploadFileModalElement};

@@ -1,29 +1,29 @@
 import { photoContainerElement } from './draw-photo.js';
 import { defaultPostsData } from './filter.js';
-import { uploadFileModal } from './upload-modal.js';
+import { uploadFileModalElement } from './upload-modal.js';
 import { isEscapeKey } from './util.js';
 
 const COMMENTS_PORTION = 5;
 const COMMENT_COUNT_PATTERN = /^[0-9]{1,9}/;
 const URL_PATTERN = /photos\/+[0-9]{1,9}.jpg/g;
 
-const fullSizeContainer = document.querySelector('.big-picture');
-const bigPhotoElement = fullSizeContainer.querySelector('div.big-picture__img img');
-const authorCommentElement = fullSizeContainer.querySelector('div.big-picture__social p.social__caption');
-const likesElement = fullSizeContainer.querySelector('span.likes-count');
-const allCommentsElement = fullSizeContainer.querySelector('.comments-count');
-const shownCommentsElement = fullSizeContainer.querySelector('.social__comment-count').childNodes[0];
-const loadMoreCommentsElement = fullSizeContainer.querySelector('.comments-loader');
-const closeFullPictureButton = fullSizeContainer.querySelector('.big-picture__cancel');
-const socialCommentContainer = fullSizeContainer.querySelector('.social__comments');
+const fullSizeContainerElement = document.querySelector('.big-picture');
+const bigPhotoElement = fullSizeContainerElement.querySelector('div.big-picture__img img');
+const authorCommentElement = fullSizeContainerElement.querySelector('div.big-picture__social p.social__caption');
+const likesElement = fullSizeContainerElement.querySelector('span.likes-count');
+const allCommentsElement = fullSizeContainerElement.querySelector('.comments-count');
+const shownCommentsElement = fullSizeContainerElement.querySelector('.social__comment-count').childNodes[0];
+const loadMoreCommentsElement = fullSizeContainerElement.querySelector('.comments-loader');
+const closeFullPictureButtonElement = fullSizeContainerElement.querySelector('.big-picture__cancel');
+const socialCommentContainerElement = fullSizeContainerElement.querySelector('.social__comments');
 
 let currentPhotoPostComments = [];
 
 const getPhotoUrl = (someUrl) => someUrl.match(URL_PATTERN).join();
 
 const removePhotoComments = () => {
-  while(socialCommentContainer.firstChild) {
-    socialCommentContainer.firstChild.remove();
+  while(socialCommentContainerElement.firstChild) {
+    socialCommentContainerElement.firstChild.remove();
   }
 };
 
@@ -48,9 +48,9 @@ const increaseCommentsCount = (commentsAmount) => {
 
 const createPhotoComments = () => {
   const newCommentsContainer = document.createDocumentFragment();
-  const photoPhostCommentsPart = currentPhotoPostComments.splice(0, COMMENTS_PORTION);
+  const photoPostCommentsPart = currentPhotoPostComments.splice(0, COMMENTS_PORTION);
   let createdCommentsCount = 0;
-  photoPhostCommentsPart.forEach((comment) => {
+  photoPostCommentsPart.forEach((comment) => {
     newCommentsContainer.append(createNewComment(comment));
     createdCommentsCount++;
   });
@@ -58,14 +58,14 @@ const createPhotoComments = () => {
     loadMoreCommentsElement.classList.add('hidden');
   }
   increaseCommentsCount(createdCommentsCount);
-  socialCommentContainer.append(newCommentsContainer);
+  socialCommentContainerElement.append(newCommentsContainer);
 };
 
 const resetCommentCount = () => {
   shownCommentsElement.textContent = shownCommentsElement.textContent.replace(COMMENT_COUNT_PATTERN, 0);
 };
 
-const onMoreCommentsButtonClickListener = () => {
+const setMoreCommentsButtonClickListener = () => {
   loadMoreCommentsElement.addEventListener('click', createPhotoComments);
 };
 
@@ -77,19 +77,19 @@ const showFullPicture = (evt) => {
   authorCommentElement.textContent = defaultPostsData.find((post) => post.url === clickedPost).description;
   currentPhotoPostComments = defaultPostsData.find((post) => post.url === clickedPost).comments.slice();
   createPhotoComments(currentPhotoPostComments);
-  onMoreCommentsButtonClickListener();
-  uploadFileModal.classList.add('modal-open');
+  setMoreCommentsButtonClickListener();
+  uploadFileModalElement.classList.add('modal-open');
 };
 
-const disablePreviewPhotoClick = () => {
+const disablePreviewPhotoClickListener = () => {
   photoContainerElement.removeEventListener('click', openFullPicture);
 };
 
-const onPreviewPhotoClick = () => {
+const setPreviewPhotoClickListener = () => {
   photoContainerElement.addEventListener('click', openFullPicture);
 };
 
-const onFullPictureEscKeydown = (evt) => {
+const checkFullPictureEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeFullPicture();
@@ -99,25 +99,25 @@ const onFullPictureEscKeydown = (evt) => {
 function openFullPicture (evt) {
   const clickedElement = evt.target;
   if (clickedElement.closest('img')) {
-    closeFullPictureButton.addEventListener('click', closeFullPicture);
-    document.addEventListener('keydown', onFullPictureEscKeydown);
-    fullSizeContainer.classList.remove('hidden');
+    closeFullPictureButtonElement.addEventListener('click', closeFullPicture);
+    document.addEventListener('keydown', checkFullPictureEscKeydown);
+    fullSizeContainerElement.classList.remove('hidden');
     loadMoreCommentsElement.classList.remove('hidden');
     resetCommentCount();
     removePhotoComments();
-    disablePreviewPhotoClick();
+    disablePreviewPhotoClickListener();
     showFullPicture(evt);
   }
 }
 
 function closeFullPicture () {
-  closeFullPictureButton.removeEventListener('click', closeFullPicture);
-  document.removeEventListener('keydown', onFullPictureEscKeydown);
+  closeFullPictureButtonElement.removeEventListener('click', closeFullPicture);
+  document.removeEventListener('keydown', checkFullPictureEscKeydown);
   loadMoreCommentsElement.removeEventListener('click', createPhotoComments);
-  uploadFileModal.classList.remove('modal-open');
-  fullSizeContainer.classList.add('hidden');
+  uploadFileModalElement.classList.remove('modal-open');
+  fullSizeContainerElement.classList.add('hidden');
   resetCommentCount();
-  onPreviewPhotoClick();
+  setPreviewPhotoClickListener();
 }
 
-export {onPreviewPhotoClick, disablePreviewPhotoClick};
+export {setPreviewPhotoClickListener, disablePreviewPhotoClickListener};

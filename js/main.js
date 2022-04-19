@@ -11,11 +11,11 @@ import { getUsersData } from './data-api.js';
 import { getPhotoPostsData } from './draw-photo.js';
 import { showLoadErrorMessage } from './util.js';
 import { setUploadForm } from './upload-modal.js';
-import { onPreviewPhotoClick } from './draw-full-size.js';
+import { setPreviewPhotoClickListener } from './draw-full-size.js';
 
 const setMainPage = () => {
   setUploadForm();
-  onPreviewPhotoClick();
+  setPreviewPhotoClickListener();
 };
 
 const initiateMainPage = () => {

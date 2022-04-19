@@ -1,13 +1,13 @@
-import { uploadUserData } from './data-api.js';
+import { sendUserData } from './data-api.js';
 import { openErrorUploadModal, openSuccessUploadModal, showLoadingMessage, closeLoadingMessage } from './upload-modal.js';
 
 const HASHTAG_PATTERN = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
 const EMPTY_SPACES_PATTERN = /\s+/g;
 const MAX_HASHTAGS = 5;
 
-const uploadForm = document.querySelector('.img-upload__form');
+const uploadFormElement = document.querySelector('.img-upload__form');
 
-const pristine = new Pristine(uploadForm, {
+const pristine = new Pristine(uploadFormElement, {
   classTo: 'img-upload__text',
   errorClass: 'img-upload--invalid',
   successClass: 'img-upload--valid',
@@ -40,17 +40,17 @@ const validateHashTags = (fieldValue) => {
 
 const getHashtagsErrorMessage = () => 'Не корректный хештег';
 
-pristine.addValidator(uploadForm.querySelector('.text__hashtags'),
+pristine.addValidator(uploadFormElement.querySelector('.text__hashtags'),
   validateHashTags,
   getHashtagsErrorMessage
 );
 
-const onSubmitButtonClick = (evt) => {
+const sendValidatedUserData = (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   if (isValid) {
     showLoadingMessage();
-    uploadUserData(
+    sendUserData(
       () => {
         closeLoadingMessage();
         openSuccessUploadModal();
@@ -64,12 +64,8 @@ const onSubmitButtonClick = (evt) => {
   }
 };
 
-const removeListenerFromSubmit = () => {
-  uploadForm.removeEventListener('submit', onSubmitButtonClick, {once: true});
-};
-
 const setListenerOnSubmit = () => {
-  uploadForm.addEventListener('submit', onSubmitButtonClick, {once: true});
+  uploadFormElement.addEventListener('submit', sendValidatedUserData, {once: true});
 };
 
-export {setListenerOnSubmit, removeListenerFromSubmit};
+export {setListenerOnSubmit};
